@@ -178,6 +178,12 @@
                 <version>${yyn.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>cn.yyn</groupId>
+                <artifactId>yyn-news</artifactId>
+                <version>${yyn.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -188,6 +194,7 @@
         <module>yyn-quartz</module>
         <module>yyn-generator</module>
         <module>yyn-common</module>
+        <module>yyn-news</module>
     </modules>
     <packaging>pom</packaging>
 

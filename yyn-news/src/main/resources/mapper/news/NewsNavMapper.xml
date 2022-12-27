@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yyn.news.mapper.NewsNavMapper">
+
+    <resultMap type="NewsNav" id="NewsNavResult">
+        <result property="navId" column="nav_id"/>
+        <result property="navName" column="nav_name"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectNewsNavVo">
+        select nav_id, nav_name, order_num, create_by, create_time, update_by, update_time
+        from news_nav
+    </sql>
+
+    <select id="selectNewsNavList" parameterType="NewsNav" resultMap="NewsNavResult">
+        <include refid="selectNewsNavVo"/>
+        <where>
+            <if test="navName != null  and navName != ''">and nav_name like concat('%', #{navName}, '%')</if>
+            <if test="orderNum != null ">and order_num = #{orderNum}</if>
+        </where>
+    </select>
+
+    <select id="selectNewsNavByNavId" parameterType="Long" resultMap="NewsNavResult">
+        <include refid="selectNewsNavVo"/>
+        where nav_id = #{navId}
+    </select>
+
+    <insert id="insertNewsNav" parameterType="NewsNav" useGeneratedKeys="true" keyProperty="navId">
+        insert into news_nav
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="navName != null">nav_name,</if>
+            <if test="orderNum != null">order_num,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="navName != null">#{navName},</if>
+            <if test="orderNum != null">#{orderNum},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateNewsNav" parameterType="NewsNav">
+        update news_nav
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="navName != null">nav_name = #{navName},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where nav_id = #{navId}
+    </update>
+
+    <delete id="deleteNewsNavByNavId" parameterType="Long">
+        delete
+        from news_nav
+        where nav_id = #{navId}
+    </delete>
+
+    <delete id="deleteNewsNavByNavIds" parameterType="String">
+        delete from news_nav where nav_id in
+        <foreach item="navId" collection="array" open="(" separator="," close=")">
+            #{navId}
+        </foreach>
+    </delete>
+</mapper>

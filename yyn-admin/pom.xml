@@ -61,6 +61,11 @@
             <artifactId>yyn-generator</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>cn.yyn</groupId>
+            <artifactId>yyn-news</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
