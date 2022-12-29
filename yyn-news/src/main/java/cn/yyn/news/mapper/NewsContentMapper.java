@@ -1,6 +1,7 @@
 package cn.yyn.news.mapper;
 
 import cn.yyn.news.domain.NewsContent;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -58,4 +59,12 @@ public interface NewsContentMapper {
      * @return 结果
      */
     public int deleteNewsContentByNewsIds(Long[] newsIds);
+
+    /**
+     * 根据导航id查询文章列表
+     *
+     * @param navId
+     * @return
+     */
+    List<NewsContent> queryNewsContentListByNavId(@Param("navId") Long navId);
 }

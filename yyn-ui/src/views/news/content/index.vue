@@ -19,6 +19,16 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="导航分类" prop="isTop">
+        <el-select v-model="queryParams.newsNavId" clearable placeholder="请选择导航分类">
+          <el-option
+            v-for="item in newsNavList"
+            :key="item.navId"
+            :label="item.navName"
+            :value="item.navId"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="是否置顶" prop="isTop">
         <el-select v-model="queryParams.isTop" clearable placeholder="请选择是否置顶">
           <el-option
@@ -135,7 +145,7 @@
           </el-button>
           <el-button
             v-hasPermi="['news:content:audit']"
-            icon="el-icon-edit"
+            icon="el-icon-top-right"
             size="mini"
             type="text"
             @click="handleAudit(scope.row)"
@@ -255,6 +265,7 @@
 
 <script>
 import {addContent, delContent, getContent, listContent, updateContent} from "@/api/news/content";
+import {listNavNotPage} from "@/api/news/nav"
 
 export default {
   name: "Content",
@@ -276,6 +287,7 @@ export default {
       // 新闻内容表格数据
       contentList: [],
       // 新闻导航列表
+      newsNavList: [],
       newsNavOptions: [],
       // 弹出层标题
       title: "",
@@ -322,6 +334,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getSearchNewsNavList();
   },
   methods: {
     /** 查询新闻内容列表 */
@@ -332,6 +345,11 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    getSearchNewsNavList() {
+      listNavNotPage().then(response => {
+        this.newsNavList = response.data;
+      })
     },
     // 取消按钮
     cancel() {

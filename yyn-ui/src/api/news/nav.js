@@ -9,6 +9,14 @@ export function listNav(query) {
   })
 }
 
+// 查询导航设置列表(不带分页)
+export function listNavNotPage() {
+  return request({
+    url: '/news/nav/list/no/page',
+    method: 'get'
+  })
+}
+
 // 查询导航设置详细
 export function getNav(navId) {
   return request({

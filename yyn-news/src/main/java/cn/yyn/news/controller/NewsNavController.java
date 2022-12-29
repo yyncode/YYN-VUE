@@ -40,6 +40,16 @@ public class NewsNavController extends BaseController {
 
 
     /**
+     * 查询导航设置列表
+     */
+//    @PreAuthorize("@ss.hasPermi('news:nav:list')")
+    @GetMapping("/list/no/page")
+    public AjaxResult listNoPage() {
+        List<NewsNav> list = newsNavService.selectNewsNavList(new NewsNav());
+        return success(list);
+    }
+
+    /**
      * 导出导航设置列表
      */
     @PreAuthorize("@ss.hasPermi('news:nav:export')")

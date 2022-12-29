@@ -94,4 +94,15 @@ public class NewsContentServiceImpl implements INewsContentService {
     public int deleteNewsContentByNewsId(Long newsId) {
         return newsContentMapper.deleteNewsContentByNewsId(newsId);
     }
+
+    /**
+     * 根据导航id查询文章内容列表
+     *
+     * @param navId
+     * @return
+     */
+    @Override
+    public List<NewsContent> selectNewsContentListByNavId(Long navId) {
+        return newsContentMapper.queryNewsContentListByNavId(navId);
+    }
 }

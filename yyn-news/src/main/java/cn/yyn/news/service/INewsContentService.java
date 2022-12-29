@@ -58,4 +58,12 @@ public interface INewsContentService {
      * @return 结果
      */
     public int deleteNewsContentByNewsId(Long newsId);
+
+    /**
+     * 根据导航id查询文章内容列表
+     *
+     * @param navId
+     * @return
+     */
+    List<NewsContent> selectNewsContentListByNavId(Long navId);
 }

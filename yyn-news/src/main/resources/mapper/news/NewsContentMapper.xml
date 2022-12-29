@@ -62,6 +62,10 @@
         <include refid="selectNewsContentVo"/>
         where news_id = #{newsId}
     </select>
+    <select id="queryNewsContentListByNavId" resultMap="NewsContentResult">
+        <include refid="selectNewsContentVo"/>
+        where news_nav_id = #{navId} and status = 1 and audit_status = 1 order by create_time desc
+    </select>
 
     <insert id="insertNewsContent" parameterType="NewsContent" useGeneratedKeys="true" keyProperty="newsId">
         insert into news_content
