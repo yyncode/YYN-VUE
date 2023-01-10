@@ -148,6 +148,20 @@ export const dynamicRoutes = [
     ]
   },
   {
+    path: '/monitor/job-log',
+    component: Layout,
+    hidden: true,
+    permissions: ['monitor:job:list'],
+    children: [
+      {
+        path: 'index/:jobId(\\d+)',
+        component: () => import('@/views/monitor/job/log'),
+        name: 'JobLog',
+        meta: { title: '调度日志', activeMenu: '/monitor/job' }
+      }
+    ]
+  },
+  {
     path: '/tool/gen-edit',
     component: Layout,
     hidden: true,
@@ -160,7 +174,22 @@ export const dynamicRoutes = [
         meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
       }
     ]
+  },
+  {
+    path: '/store/store-page',
+    component: Layout,
+    hidden: true,
+    permissions: ['store:page:create'],
+    children: [
+      {
+        path: 'create',
+        component: () => import('@/views/store/page/PageCreate'),
+        name: 'PageCreate',
+        meta: { title: '店铺页面创建', activeMenu: '/store/page' }
+      }
+    ]
   }
+
 ]
 
 // 防止连续点击多次路由报错

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yyn.store.mapper.ShopDeliveryTemplateMapper">
+    
+    <resultMap type="ShopDeliveryTemplate" id="ShopDeliveryResult">
+        <result property="deliveryId"    column="delivery_id"    />
+        <result property="name"    column="name"    />
+        <result property="method"    column="method"    />
+        <result property="sort"    column="sort"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="storeId"    column="store_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectShopDeliveryVo">
+        select delivery_id, name, method, sort, is_delete, store_id, create_by, create_time, update_by, update_time, remark from shop_delivery
+    </sql>
+
+    <select id="selectShopDeliveryList" parameterType="ShopDeliveryTemplate" resultMap="ShopDeliveryResult">
+        <include refid="selectShopDeliveryVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="method != null "> and method = #{method}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+            <if test="storeId != null "> and store_id = #{storeId}</if>
+        </where>
+    </select>
+    
+    <select id="selectShopDeliveryByDeliveryId" parameterType="Long" resultMap="ShopDeliveryResult">
+        <include refid="selectShopDeliveryVo"/>
+        where delivery_id = #{deliveryId}
+    </select>
+        
+    <insert id="insertShopDelivery" parameterType="ShopDeliveryTemplate" useGeneratedKeys="true" keyProperty="deliveryId">
+        insert into shop_delivery
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="method != null">method,</if>
+            <if test="sort != null">sort,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="storeId != null">store_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="method != null">#{method},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="storeId != null">#{storeId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShopDelivery" parameterType="ShopDeliveryTemplate">
+        update shop_delivery
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="method != null">method = #{method},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where delivery_id = #{deliveryId}
+    </update>
+
+    <delete id="deleteShopDeliveryByDeliveryId" parameterType="Long">
+        delete from shop_delivery where delivery_id = #{deliveryId}
+    </delete>
+
+    <delete id="deleteShopDeliveryByDeliveryIds" parameterType="String">
+        delete from shop_delivery where delivery_id in 
+        <foreach item="deliveryId" collection="array" open="(" separator="," close=")">
+            #{deliveryId}
+        </foreach>
+    </delete>
+</mapper>

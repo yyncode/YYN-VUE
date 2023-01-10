@@ -202,7 +202,7 @@ export default {
           strs += list[i].url.replace(this.baseUrl, "") + separator;
         }
       }
-      return strs != '' ? strs.substr(0, strs.length - 1) : '';
+      return strs !== '' ? strs.substr(0, strs.length - 1) : '';
     }
   }
 };

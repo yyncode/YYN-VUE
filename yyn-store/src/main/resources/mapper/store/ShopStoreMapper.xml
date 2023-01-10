@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yyn.store.mapper.ShopStoreMapper">
+
+    <resultMap type="ShopStore" id="ShopStoreResult">
+        <result property="storeId"    column="store_id"    />
+        <result property="storeName"    column="store_name"    />
+        <result property="describe"    column="describe"    />
+        <result property="logoImageId"    column="logo_image_id"    />
+        <result property="sort"    column="sort"    />
+        <result property="isRecycle"    column="is_recycle"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectShopStoreVo">
+        select store_id, store_name, describe, logo_image_id, sort, is_recycle, is_delete, create_by, create_time, update_by, update_time, remark from shop_store
+    </sql>
+
+    <select id="selectShopStoreList" parameterType="ShopStore" resultMap="ShopStoreResult">
+        <include refid="selectShopStoreVo"/>
+        <where>
+            <if test="storeName != null  and storeName != ''"> and store_name like concat('%', #{storeName}, '%')</if>
+            <if test="describe != null  and describe != ''"> and describe = #{describe}</if>
+            <if test="logoImageId != null "> and logo_image_id = #{logoImageId}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="isRecycle != null "> and is_recycle = #{isRecycle}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+
+    <select id="selectShopStoreByStoreId" parameterType="Long" resultMap="ShopStoreResult">
+        <include refid="selectShopStoreVo"/>
+        where store_id = #{storeId}
+    </select>
+
+    <insert id="insertShopStore" parameterType="ShopStore" useGeneratedKeys="true" keyProperty="storeId">
+        insert into shop_store
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storeName != null and storeName != ''">store_name,</if>
+            <if test="describe != null and describe != ''">describe,</if>
+            <if test="logoImageId != null">logo_image_id,</if>
+            <if test="sort != null">sort,</if>
+            <if test="isRecycle != null">is_recycle,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storeName != null and storeName != ''">#{storeName},</if>
+            <if test="describe != null and describe != ''">#{describe},</if>
+            <if test="logoImageId != null">#{logoImageId},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="isRecycle != null">#{isRecycle},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateShopStore" parameterType="ShopStore">
+        update shop_store
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storeName != null and storeName != ''">store_name = #{storeName},</if>
+            <if test="describe != null and describe != ''">describe = #{describe},</if>
+            <if test="logoImageId != null">logo_image_id = #{logoImageId},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="isRecycle != null">is_recycle = #{isRecycle},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where store_id = #{storeId}
+    </update>
+
+    <delete id="deleteShopStoreByStoreId" parameterType="Long">
+        delete from shop_store where store_id = #{storeId}
+    </delete>
+
+    <delete id="deleteShopStoreByStoreIds" parameterType="String">
+        delete from shop_store where store_id in
+        <foreach item="storeId" collection="array" open="(" separator="," close=")">
+            #{storeId}
+        </foreach>
+    </delete>
+</mapper>

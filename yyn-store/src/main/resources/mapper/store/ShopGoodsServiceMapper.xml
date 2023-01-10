@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yyn.store.mapper.ShopGoodsServiceMapper">
+    
+    <resultMap type="ShopGoodsService" id="ShopGoodsServiceResult">
+        <result property="serviceId"    column="service_id"    />
+        <result property="name"    column="name"    />
+        <result property="summary"    column="summary"    />
+        <result property="isDefault"    column="is_default"    />
+        <result property="status"    column="status"    />
+        <result property="sort"    column="sort"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="storeId"    column="store_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectShopGoodsServiceVo">
+        select service_id, name, summary, is_default, status, sort, is_delete, store_id, create_by, create_time, update_by, update_time, remark from shop_goods_service
+    </sql>
+
+    <select id="selectShopGoodsServiceList" parameterType="ShopGoodsService" resultMap="ShopGoodsServiceResult">
+        <include refid="selectShopGoodsServiceVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="summary != null  and summary != ''"> and summary = #{summary}</if>
+            <if test="isDefault != null "> and is_default = #{isDefault}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+            <if test="storeId != null "> and store_id = #{storeId}</if>
+        </where>
+    </select>
+    
+    <select id="selectShopGoodsServiceByServiceId" parameterType="Long" resultMap="ShopGoodsServiceResult">
+        <include refid="selectShopGoodsServiceVo"/>
+        where service_id = #{serviceId}
+    </select>
+        
+    <insert id="insertShopGoodsService" parameterType="ShopGoodsService" useGeneratedKeys="true" keyProperty="serviceId">
+        insert into shop_goods_service
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="summary != null and summary != ''">summary,</if>
+            <if test="isDefault != null">is_default,</if>
+            <if test="status != null">status,</if>
+            <if test="sort != null">sort,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="storeId != null">store_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="summary != null and summary != ''">#{summary},</if>
+            <if test="isDefault != null">#{isDefault},</if>
+            <if test="status != null">#{status},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="storeId != null">#{storeId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShopGoodsService" parameterType="ShopGoodsService">
+        update shop_goods_service
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="summary != null and summary != ''">summary = #{summary},</if>
+            <if test="isDefault != null">is_default = #{isDefault},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where service_id = #{serviceId}
+    </update>
+
+    <delete id="deleteShopGoodsServiceByServiceId" parameterType="Long">
+        delete from shop_goods_service where service_id = #{serviceId}
+    </delete>
+
+    <delete id="deleteShopGoodsServiceByServiceIds" parameterType="String">
+        delete from shop_goods_service where service_id in 
+        <foreach item="serviceId" collection="array" open="(" separator="," close=")">
+            #{serviceId}
+        </foreach>
+    </delete>
+</mapper>

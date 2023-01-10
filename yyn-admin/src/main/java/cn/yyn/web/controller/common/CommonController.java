@@ -20,7 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 通用请求处理
@@ -89,6 +91,35 @@ public class CommonController
             ajax.put("newFileName", FileUtils.getName(fileName));
             ajax.put("originalFilename", file.getOriginalFilename());
             return ajax;
+        }
+        catch (Exception e)
+        {
+            return AjaxResult.error(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 通用上传请求（单个）
+     */
+    @PostMapping("/upload/v1")
+    public AjaxResult uploadFileNew(MultipartFile file) throws Exception
+    {
+        try
+        {
+            // 上传文件路径
+            String filePath = AppConfig.getUploadPath();
+            // 上传并返回新文件名称
+            String fileName = FileUploadUtils.upload(filePath, file);
+            String url = serverConfig.getUrl() + fileName;
+            Map<String,Object> data = new LinkedHashMap<>();
+            data.put("url", url);
+            data.put("fileName", fileName);
+            data.put("newFileName", FileUtils.getName(fileName));
+            data.put("originalFilename", file.getOriginalFilename());
+            data.put("fileSize", file.getSize());
+            data.put("fileExt", FileUploadUtils.getExtension(file));
+            return AjaxResult.success(data);
         }
         catch (Exception e)
         {

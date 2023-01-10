@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yyn.store.mapper.ShopDeliveryRuleMapper">
+    
+    <resultMap type="ShopDeliveryRule" id="ShopDeliveryRuleResult">
+        <result property="ruleId"    column="rule_id"    />
+        <result property="deliveryId"    column="delivery_id"    />
+        <result property="region"    column="region"    />
+        <result property="regionText"    column="region_text"    />
+        <result property="first"    column="first"    />
+        <result property="firstFee"    column="first_fee"    />
+        <result property="additional"    column="additional"    />
+        <result property="additionalFee"    column="additional_fee"    />
+        <result property="storeId"    column="store_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectShopDeliveryRuleVo">
+        select rule_id, delivery_id, region, region_text, first, first_fee, additional, additional_fee, store_id, create_by, create_time, update_by, update_time, remark from shop_delivery_rule
+    </sql>
+
+    <select id="selectShopDeliveryRuleList" parameterType="ShopDeliveryRule" resultMap="ShopDeliveryRuleResult">
+        <include refid="selectShopDeliveryRuleVo"/>
+        <where>  
+            <if test="deliveryId != null "> and delivery_id = #{deliveryId}</if>
+            <if test="region != null  and region != ''"> and region = #{region}</if>
+            <if test="regionText != null  and regionText != ''"> and region_text = #{regionText}</if>
+            <if test="first != null  and first != ''"> and first = #{first}</if>
+            <if test="firstFee != null "> and first_fee = #{firstFee}</if>
+            <if test="additional != null  and additional != ''"> and additional = #{additional}</if>
+            <if test="additionalFee != null "> and additional_fee = #{additionalFee}</if>
+            <if test="storeId != null "> and store_id = #{storeId}</if>
+        </where>
+    </select>
+    
+    <select id="selectShopDeliveryRuleByRuleId" parameterType="Long" resultMap="ShopDeliveryRuleResult">
+        <include refid="selectShopDeliveryRuleVo"/>
+        where rule_id = #{ruleId}
+    </select>
+    <select id="selectShopDeliveryRulesBydeliveryId" parameterType="Long" resultMap="ShopDeliveryRuleResult">
+        <include refid="selectShopDeliveryRuleVo"/>
+        where delivery_id = #{deliveryId}
+    </select>
+
+    <insert id="insertShopDeliveryRule" parameterType="ShopDeliveryRule" useGeneratedKeys="true" keyProperty="ruleId">
+        insert into shop_delivery_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deliveryId != null">delivery_id,</if>
+            <if test="region != null and region != ''">region,</if>
+            <if test="regionText != null and regionText != ''">region_text,</if>
+            <if test="first != null and first != ''">first,</if>
+            <if test="firstFee != null">first_fee,</if>
+            <if test="additional != null and additional != ''">additional,</if>
+            <if test="additionalFee != null">additional_fee,</if>
+            <if test="storeId != null">store_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deliveryId != null">#{deliveryId},</if>
+            <if test="region != null and region != ''">#{region},</if>
+            <if test="regionText != null and regionText != ''">#{regionText},</if>
+            <if test="first != null and first != ''">#{first},</if>
+            <if test="firstFee != null">#{firstFee},</if>
+            <if test="additional != null and additional != ''">#{additional},</if>
+            <if test="additionalFee != null">#{additionalFee},</if>
+            <if test="storeId != null">#{storeId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShopDeliveryRule" parameterType="ShopDeliveryRule">
+        update shop_delivery_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deliveryId != null">delivery_id = #{deliveryId},</if>
+            <if test="region != null and region != ''">region = #{region},</if>
+            <if test="regionText != null and regionText != ''">region_text = #{regionText},</if>
+            <if test="first != null and first != ''">first = #{first},</if>
+            <if test="firstFee != null">first_fee = #{firstFee},</if>
+            <if test="additional != null and additional != ''">additional = #{additional},</if>
+            <if test="additionalFee != null">additional_fee = #{additionalFee},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where rule_id = #{ruleId}
+    </update>
+
+    <delete id="deleteShopDeliveryRuleByRuleId" parameterType="Long">
+        delete from shop_delivery_rule where rule_id = #{ruleId}
+    </delete>
+
+    <delete id="deleteShopDeliveryRuleByRuleIds" parameterType="String">
+        delete from shop_delivery_rule where rule_id in 
+        <foreach item="ruleId" collection="array" open="(" separator="," close=")">
+            #{ruleId}
+        </foreach>
+    </delete>
+    <delete id="deleteShopDeliveryRuleByDeliveryId" parameterType="Long">
+        delete from shop_delivery_rule where delivery_id = #{deliveryId}
+    </delete>
+</mapper>
