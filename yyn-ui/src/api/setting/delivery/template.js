@@ -9,6 +9,14 @@ export function listDelivery(query) {
   })
 }
 
+// 查询配送模板主列表不分页
+export function listDeliveryNoPage() {
+  return request({
+    url: '/setting/delivery/template/list/no/page',
+    method: 'get'
+  })
+}
+
 // 查询配送模板主详细
 export function getDelivery(deliveryId) {
   return request({

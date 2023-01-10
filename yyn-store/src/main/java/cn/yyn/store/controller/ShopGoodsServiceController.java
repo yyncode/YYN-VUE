@@ -33,11 +33,20 @@ public class ShopGoodsServiceController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('goods:service:list')")
     @GetMapping("/list")
-    public TableDataInfo list(ShopGoodsService shopGoodsService)
-    {
+    public TableDataInfo list(ShopGoodsService shopGoodsService) {
         startPage();
         List<ShopGoodsService> list = shopGoodsServiceService.selectShopGoodsServiceList(shopGoodsService);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询商品服务与承诺记录列表(无分页)
+     */
+    @PreAuthorize("@ss.hasPermi('goods:service:list:no:page')")
+    @GetMapping("/list/no/page")
+    public AjaxResult list() {
+        List<ShopGoodsService> list = shopGoodsServiceService.selectShopGoodsServiceList(new ShopGoodsService());
+        return success(list);
     }
 
     /**
@@ -46,8 +55,7 @@ public class ShopGoodsServiceController extends BaseController
     @PreAuthorize("@ss.hasPermi('goods:service:export')")
     @Log(title = "商品服务与承诺记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, ShopGoodsService shopGoodsService)
-    {
+    public void export(HttpServletResponse response, ShopGoodsService shopGoodsService) {
         List<ShopGoodsService> list = shopGoodsServiceService.selectShopGoodsServiceList(shopGoodsService);
         ExcelUtil<ShopGoodsService> util = new ExcelUtil<ShopGoodsService>(ShopGoodsService.class);
         util.exportExcel(response, list, "商品服务与承诺记录数据");

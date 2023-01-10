@@ -33,11 +33,20 @@ public class ShopDeliveryTemplateController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('setting:delivery:template:list')")
     @GetMapping("/list")
-    public TableDataInfo list(ShopDeliveryTemplate shopDeliveryTemplate)
-    {
+    public TableDataInfo list(ShopDeliveryTemplate shopDeliveryTemplate) {
         startPage();
         List<ShopDeliveryTemplate> list = shopDeliveryService.selectShopDeliveryList(shopDeliveryTemplate);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询配送模板不分页列表
+     */
+    @PreAuthorize("@ss.hasPermi('setting:delivery:template:list:no:page')")
+    @GetMapping("/list/no/page")
+    public AjaxResult list() {
+        List<ShopDeliveryTemplate> list = shopDeliveryService.selectShopDeliveryList(new ShopDeliveryTemplate());
+        return success(list);
     }
 
     /**
@@ -46,8 +55,7 @@ public class ShopDeliveryTemplateController extends BaseController
     @PreAuthorize("@ss.hasPermi('setting:delivery:template:export')")
     @Log(title = "配送模板主", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, ShopDeliveryTemplate shopDeliveryTemplate)
-    {
+    public void export(HttpServletResponse response, ShopDeliveryTemplate shopDeliveryTemplate) {
         List<ShopDeliveryTemplate> list = shopDeliveryService.selectShopDeliveryList(shopDeliveryTemplate);
         ExcelUtil<ShopDeliveryTemplate> util = new ExcelUtil<ShopDeliveryTemplate>(ShopDeliveryTemplate.class);
         util.exportExcel(response, list, "配送模板主数据");

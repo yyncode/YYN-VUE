@@ -9,6 +9,14 @@ export function listService(query) {
   })
 }
 
+// 查询商品服务与承诺记录列表(无分页)
+export function listServiceNoPage() {
+  return request({
+    url: '/goods/service/list/no/page',
+    method: 'get'
+  })
+}
+
 // 查询商品服务与承诺记录详细
 export function getService(serviceId) {
   return request({
