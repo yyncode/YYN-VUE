@@ -59,4 +59,10 @@ public interface ShopCategoryMapper
      * @return 结果
      */
     public int deleteShopCategoryByCategoryIds(Long[] categoryIds);
+
+    /**
+     * 根据商品分类id查询分类星系
+     * @param categoryIds
+     */
+    List<ShopCategory> selectShopCategoryByCategoryIds(Long[] categoryIds);
 }

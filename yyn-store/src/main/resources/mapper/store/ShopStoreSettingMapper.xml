@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yyn.store.mapper.ShopStoreSettingMapper">
+    
+    <resultMap type="ShopStoreSetting" id="ShopStoreSettingResult">
+        <result property="key"    column="key"    />
+        <result property="describe"    column="describe"    />
+        <result property="values"    column="values"    />
+        <result property="storeId"    column="store_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectShopStoreSettingVo">
+        select `key`, `describe`, `values`, store_id, create_by, create_time, update_by, update_time, remark from shop_store_setting
+    </sql>
+
+    <select id="selectShopStoreSettingList" parameterType="ShopStoreSetting" resultMap="ShopStoreSettingResult">
+        <include refid="selectShopStoreSettingVo"/>
+        <where>  
+            <if test="describe != null  and describe != ''"> and `describe` = #{describe}</if>
+            <if test="values != null  and values != ''"> and `values` = #{values}</if>
+        </where>
+    </select>
+    
+    <select id="selectShopStoreSettingByKey" resultMap="ShopStoreSettingResult">
+        <include refid="selectShopStoreSettingVo"/>
+        where `key` = #{key} and store_id = #{storeId}
+    </select>
+        
+    <insert id="insertShopStoreSetting" parameterType="ShopStoreSetting">
+        insert into shop_store_setting
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="key != null">`key`,</if>
+            <if test="describe != null and describe != ''">`describe`,</if>
+            <if test="values != null and values != ''">`values`,</if>
+            <if test="storeId != null">store_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="key != null">#{key},</if>
+            <if test="describe != null and describe != ''">#{describe},</if>
+            <if test="values != null and values != ''">#{values},</if>
+            <if test="storeId != null">#{storeId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShopStoreSetting" parameterType="ShopStoreSetting">
+        update shop_store_setting
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="describe != null and describe != ''">`describe` = #{describe},</if>
+            <if test="values != null and values != ''">`values` = #{values},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where `key` = #{key}
+    </update>
+
+    <delete id="deleteShopStoreSettingByKey" parameterType="String">
+        delete from shop_store_setting where `key` = #{key}
+    </delete>
+
+    <delete id="deleteShopStoreSettingByKeys" parameterType="String">
+        delete from shop_store_setting where `key` in
+        <foreach item="key" collection="array" open="(" separator="," close=")">
+            #{key}
+        </foreach>
+    </delete>
+</mapper>

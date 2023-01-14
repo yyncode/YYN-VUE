@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yyn.store.mapper.ShopGoodsCategoryRelMapper">
+    
+    <resultMap type="ShopGoodsCategoryRel" id="ShopGoodsCategoryRelResult">
+        <result property="id"    column="id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="categoryId"    column="category_id"    />
+        <result property="storeId"    column="store_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectShopGoodsCategoryRelVo">
+        select id, goods_id, category_id, store_id, create_by, create_time, update_by, update_time, remark from shop_goods_category_rel
+    </sql>
+
+    <select id="selectShopGoodsCategoryRelList" parameterType="ShopGoodsCategoryRel" resultMap="ShopGoodsCategoryRelResult">
+        <include refid="selectShopGoodsCategoryRelVo"/>
+        <where>  
+            <if test="goodsId != null "> and goods_id = #{goodsId}</if>
+            <if test="categoryId != null "> and category_id = #{categoryId}</if>
+            <if test="storeId != null "> and store_id = #{storeId}</if>
+        </where>
+    </select>
+    
+    <select id="selectShopGoodsCategoryRelById" parameterType="Long" resultMap="ShopGoodsCategoryRelResult">
+        <include refid="selectShopGoodsCategoryRelVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectShopGoodsCategoryRelByGoodsId" resultType="java.lang.Long">
+        select category_id from shop_goods_category_rel where goods_id = #{goodsId}
+    </select>
+
+    <insert id="insertShopGoodsCategoryRel" parameterType="ShopGoodsCategoryRel" useGeneratedKeys="true" keyProperty="id">
+        insert into shop_goods_category_rel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null">goods_id,</if>
+            <if test="categoryId != null">category_id,</if>
+            <if test="storeId != null">store_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="storeId != null">#{storeId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShopGoodsCategoryRel" parameterType="ShopGoodsCategoryRel">
+        update shop_goods_category_rel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteShopGoodsCategoryRelById" parameterType="Long">
+        delete from shop_goods_category_rel where id = #{id}
+    </delete>
+
+    <delete id="deleteShopGoodsCategoryRelByIds" parameterType="String">
+        delete from shop_goods_category_rel where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteShopGoodsCategoryRelByGoodsId">
+        delete from shop_goods_category_rel where goods_id = #{goodsId}
+    </delete>
+</mapper>

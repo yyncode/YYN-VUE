@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="components">
-      <el-collapse v-model="activeNames" @change="handleChange">
+      <el-collapse v-model="activeNames">
         <el-collapse-item v-for="group in components" :key="group.key" :title="group.name" :name="group.key">
           <div class="module-list">
             <div
@@ -103,10 +103,8 @@ export default {
     };
   },
   methods: {
-    handleChange(val) {
-      console.log(val);
-    },
     handleClickItem (type) {
+      console.log(type)
       this.$emit('handleClickItem', type)
     }
   },

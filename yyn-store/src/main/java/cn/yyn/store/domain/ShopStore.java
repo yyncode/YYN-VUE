@@ -29,6 +29,10 @@ public class ShopStore extends BaseEntity
     /** 商城logo文件ID */
     @Excel(name = "商城logo文件ID")
     private Long logoImageId;
+    /** 商城logo */
+    @Excel(name = "商城logo")
+    private String logoImageUrl;
+
 
     /** 排序(数字越小越靠前) */
     @Excel(name = "排序(数字越小越靠前)")
@@ -78,6 +82,15 @@ public class ShopStore extends BaseEntity
     {
         return logoImageId;
     }
+
+    public String getLogoImageUrl() {
+        return logoImageUrl;
+    }
+
+    public void setLogoImageUrl(String logoImageUrl) {
+        this.logoImageUrl = logoImageUrl;
+    }
+
     public void setSort(Long sort)
     {
         this.sort = sort;

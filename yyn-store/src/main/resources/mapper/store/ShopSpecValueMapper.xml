@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yyn.store.mapper.ShopSpecValueMapper">
+    
+    <resultMap type="ShopSpecValue" id="ShopSpecValueResult">
+        <result property="specValueId"    column="spec_value_id"    />
+        <result property="specValue"    column="spec_value"    />
+        <result property="specId"    column="spec_id"    />
+        <result property="storeId"    column="store_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectShopSpecValueVo">
+        select spec_value_id, spec_value, spec_id, store_id, create_by, create_time, update_by, update_time, remark from shop_spec_value
+    </sql>
+
+    <select id="selectShopSpecValueList" parameterType="ShopSpecValue" resultMap="ShopSpecValueResult">
+        <include refid="selectShopSpecValueVo"/>
+        <where>  
+            <if test="specValue != null  and specValue != ''"> and spec_value = #{specValue}</if>
+            <if test="specId != null "> and spec_id = #{specId}</if>
+            <if test="storeId != null "> and store_id = #{storeId}</if>
+        </where>
+    </select>
+    
+    <select id="selectShopSpecValueBySpecValueId" parameterType="Long" resultMap="ShopSpecValueResult">
+        <include refid="selectShopSpecValueVo"/>
+        where spec_value_id = #{specValueId}
+    </select>
+    <select id="selectShopSpecValueBySpecValueName" resultMap="ShopSpecValueResult">
+        <include refid="selectShopSpecValueVo"/>
+        where spec_value = #{specValue}
+    </select>
+    <select id="selectShopSpecValueBySpecValueNameAndSpecId" resultMap="ShopSpecValueResult">
+        <include refid="selectShopSpecValueVo"/>
+        where spec_value = #{specValue} and spec_id = #{specId}
+    </select>
+
+    <insert id="insertShopSpecValue" parameterType="ShopSpecValue" useGeneratedKeys="true" keyProperty="specValueId">
+        insert into shop_spec_value
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="specValue != null and specValue != ''">spec_value,</if>
+            <if test="specId != null">spec_id,</if>
+            <if test="storeId != null">store_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="specValue != null and specValue != ''">#{specValue},</if>
+            <if test="specId != null">#{specId},</if>
+            <if test="storeId != null">#{storeId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShopSpecValue" parameterType="ShopSpecValue">
+        update shop_spec_value
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="specValue != null and specValue != ''">spec_value = #{specValue},</if>
+            <if test="specId != null">spec_id = #{specId},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where spec_value_id = #{specValueId}
+    </update>
+
+    <delete id="deleteShopSpecValueBySpecValueId" parameterType="Long">
+        delete from shop_spec_value where spec_value_id = #{specValueId}
+    </delete>
+
+    <delete id="deleteShopSpecValueBySpecValueIds" parameterType="String">
+        delete from shop_spec_value where spec_value_id in 
+        <foreach item="specValueId" collection="array" open="(" separator="," close=")">
+            #{specValueId}
+        </foreach>
+    </delete>
+</mapper>

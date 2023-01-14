@@ -1,6 +1,7 @@
 package cn.yyn.store.service;
 
 import cn.yyn.store.domain.ShopGoods;
+import cn.yyn.store.dto.GoodsDto;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface IShopGoodsService
      * @param goodsId 商品记录主键
      * @return 商品记录
      */
-    public ShopGoods selectShopGoodsByGoodsId(Long goodsId);
+    public GoodsDto selectShopGoodsByGoodsId(Long goodsId);
 
     /**
      * 查询商品记录列表
@@ -31,18 +32,18 @@ public interface IShopGoodsService
     /**
      * 新增商品记录
      * 
-     * @param shopGoods 商品记录
+     * @param goodsDto 商品记录
      * @return 结果
      */
-    public int insertShopGoods(ShopGoods shopGoods);
+    public int insertShopGoods(GoodsDto goodsDto);
 
     /**
      * 修改商品记录
      * 
-     * @param shopGoods 商品记录
+     * @param goodsDto 商品记录
      * @return 结果
      */
-    public int updateShopGoods(ShopGoods shopGoods);
+    public int updateShopGoods(GoodsDto goodsDto);
 
     /**
      * 批量删除商品记录

@@ -31,7 +31,7 @@
             :style="renderItemStyle(item)"
           >
             <!-- 图片轮播 -->
-            <div v-if="item.type == 'banner'" class="diy-banner">
+            <div v-if="item.type === 'banner'" class="diy-banner">
               <img
                 v-for="(dataItem, dataIdx) in item.data"
                 :key="`${index}_${dataIdx}_img`"
@@ -50,7 +50,7 @@
 
             <!-- 图片组 -->
             <div
-              v-else-if="item.type == 'image'"
+              v-else-if="item.type === 'image'"
               class="diy-image"
               :style="{ paddingBottom: item.style.paddingTop + 'px', background: item.style.background}"
             >
@@ -66,7 +66,7 @@
 
             <!-- 图片橱窗 -->
             <div
-              v-else-if="item.type == 'window'"
+              v-else-if="item.type === 'window'"
               class="diy-window"
               :style="{ background: item.style.background, padding: `${item.style.paddingTop}px ${item.style.paddingLeft}px` }"
             >
@@ -123,7 +123,7 @@
 
             <!-- 视频组 -->
             <div
-              v-else-if="item.type == 'video'"
+              v-else-if="item.type === 'video'"
               class="diy-video"
               :style="{ padding: `${item.style.paddingTop}px 0` }"
             >
@@ -136,16 +136,16 @@
             </div>
 
             <!-- 文章组 -->
-            <div v-else-if="item.type == 'article'" class="diy-article">
+            <div v-else-if="item.type === 'article'" class="diy-article">
               <div class="diy-article">
                 <div
                   class="article-item"
-                  v-for="(dataItm, dataIdx) in (item.params.source == 'choice' ? item.data : item.defaultData)"
+                  v-for="(dataItm, dataIdx) in (item.params.source === 'choice' ? item.data : item.defaultData)"
                   :key="`${index}_${dataIdx}`"
                   :class="`show-type__${dataItm.show_type}`"
                 >
                   <!-- 小图模式 -->
-                  <template v-if="dataItm.show_type == 10">
+                  <template v-if="dataItm.show_type === 10">
                     <div class="article-item__left flex-box">
                       <div class="article-item__title twolist-hidden">
                         <span class="article-title">{{ dataItm.title }}</span>
@@ -159,7 +159,7 @@
                     </div>
                   </template>
                   <!-- 大图模式 -->
-                  <template v-if="dataItm.show_type == 20">
+                  <template v-if="dataItm.show_type === 20">
                     <div class="article-item__title">
                       <span class="article-title">{{ dataItm.title }}</span>
                     </div>
@@ -175,7 +175,7 @@
             </div>
 
             <!-- 搜索栏 -->
-            <div v-else-if="item.type == 'search'" class="diy-search">
+            <div v-else-if="item.type === 'search'" class="diy-search">
               <div class="inner" :class="item.style.searchStyle">
                 <div class="search-input" :style="{ textAlign: item.style.textAlign }">
                   <svg-icon class="search-icon" icon-class="search"/>
@@ -186,7 +186,7 @@
 
             <!-- 店铺公告 -->
             <div
-              v-else-if="item.type == 'notice'"
+              v-else-if="item.type === 'notice'"
               class="diy-notice"
               :style="{ padding: `${item.style.paddingTop}px 0` }"
             >
@@ -205,7 +205,7 @@
 
             <!-- 导航组 -->
             <div
-              v-else-if="item.type == 'navBar'"
+              v-else-if="item.type === 'navBar'"
               class="diy-navBar"
               :style="{ padding: `${item.style.paddingTop}px 0`, background: item.style.background, color: item.style.textColor }"
             >
@@ -225,7 +225,7 @@
 
             <!-- 商品组 -->
             <div
-              v-else-if="item.type == 'goods'"
+              v-else-if="item.type === 'goods'"
               class="diy-goods"
               :style="{ background: item.style.background }"
             >
@@ -235,11 +235,11 @@
               >
                 <li
                   class="goods-item"
-                  v-for="(dataItm, dataIdx) in (item.params.source == 'choice' ? item.data : item.defaultData)"
+                  v-for="(dataItm, dataIdx) in (item.params.source === 'choice' ? item.data : item.defaultData)"
                   :key="`${index}_${dataIdx}`"
                 >
                   <!-- 单列商品 -->
-                  <template v-if="item.style.column == 1">
+                  <template v-if="item.style.column === 1">
                     <div class="flex">
                       <!-- 商品图片 -->
                       <div class="goods-item_left">
@@ -314,14 +314,14 @@
 
             <!-- 辅助空白 -->
             <div
-              v-else-if="item.type == 'blank'"
+              v-else-if="item.type === 'blank'"
               class="diy-blank"
               :style="{ height: `${item.style.height}px` , background: item.style.background }"
             ></div>
 
             <!-- 辅助线 -->
             <div
-              v-else-if="item.type == 'guide'"
+              v-else-if="item.type === 'guide'"
               class="diy-guide"
               :style="{ padding: `${item.style.paddingTop}px 0`, background: item.style.background }"
             >
@@ -337,7 +337,7 @@
 
             <!-- 在线客服 -->
             <div
-              v-else-if="item.type == 'service'"
+              v-else-if="item.type === 'service'"
               class="diy-service"
               :style="{ opacity: item.style.opacity / 100 }"
             >
@@ -348,7 +348,7 @@
 
             <!-- 富文本 -->
             <div
-              v-else-if="item.type == 'richText'"
+              v-else-if="item.type === 'richText'"
               class="diy-richText"
               :style="{ background: item.style.background, padding: `${item.style.paddingTop}px ${item.style.paddingLeft}px` }"
               v-html="item.params.content"

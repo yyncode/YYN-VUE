@@ -41,7 +41,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:address:add']"
+          v-hasPermi="['store:address:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -52,7 +52,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:address:edit']"
+          v-hasPermi="['store:address:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -63,7 +63,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:address:remove']"
+          v-hasPermi="['store:address:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -73,7 +73,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:address:export']"
+          v-hasPermi="['store:address:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -103,14 +103,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:address:edit']"
+            v-hasPermi="['store:address:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:address:remove']"
+            v-hasPermi="['store:address:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -125,17 +125,26 @@
     />
 
     <!-- 添加或修改商家地址记录对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="150px">
         <el-form-item label="地址类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择地址类型(10发货地址 20退货地址)">
-            <el-option
-              v-for="dict in dict.type.address_type"
-              :key="dict.value"
-              :label="dict.label"
-              :value="parseInt(dict.value)"
-            ></el-option>
-          </el-select>
+<!--          <el-select v-model="form.type" placeholder="请选择地址类型(10发货地址 20退货地址)">-->
+<!--            <el-option-->
+<!--              v-for="dict in dict.type.address_type"-->
+<!--              :key="dict.value"-->
+<!--              :label="dict.label"-->
+<!--              :value="parseInt(dict.value)"-->
+<!--            ></el-option>-->
+<!--          </el-select>-->
+          <el-radio-group v-model="form.type">
+            <el-radio v-for="dict in dict.type.address_type"
+                      :key="dict.value"
+                      :label="parseInt(dict.value)">
+              {{dict.label}}
+            </el-radio>
+<!--            <el-radio :label="20">以最低运费结算</el-radio>-->
+<!--            <el-radio :label="30">以最高运费结算</el-radio>-->
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="联系人姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入联系人姓名" />
@@ -143,20 +152,23 @@
         <el-form-item label="联系电话" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入联系电话" />
         </el-form-item>
-        <el-form-item label="省份ID" prop="provinceId">
-          <el-input v-model="form.provinceId" placeholder="请输入省份ID" />
-        </el-form-item>
-        <el-form-item label="城市ID" prop="cityId">
-          <el-input v-model="form.cityId" placeholder="请输入城市ID" />
-        </el-form-item>
-        <el-form-item label="区/县ID" prop="regionId">
-          <el-input v-model="form.regionId" placeholder="请输入区/县ID" />
+        <el-form-item label="选择地区" required>
+          <el-cascader
+            v-model="province_city_region"
+            :options="provinceCityRegionOptions"
+            :props="provinceCityRegionProps"
+            >
+            <template slot-scope="{ node, data }">
+              <span>{{ data.name }}</span>
+              <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+            </template>
+          </el-cascader>
         </el-form-item>
         <el-form-item label="详细地址" prop="detail">
           <el-input v-model="form.detail" placeholder="请输入详细地址" />
         </el-form-item>
         <el-form-item label="排序" prop="sort">
-          <el-input type="number" v-model="form.sort" placeholder="请输入排序(数字越小越靠前)" />
+          <el-input-number v-model="form.sort" placeholder="请输入排序(数字越小越靠前)" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -168,7 +180,8 @@
 </template>
 
 <script>
-// import { listAddress, getAddress, delAddress, addAddress, updateAddress } from "@/api/system/address";
+import {addAddress, delAddress, getAddress, listAddress, updateAddress} from "@/api/store/address";
+import {listRegion} from "@/api/store/region";
 
 export default {
   name: "Address",
@@ -221,27 +234,41 @@ export default {
         phone: [
           { required: true, message: "联系电话不能为空", trigger: "blur" }
         ],
+        // province_city_region:[
+        //   { required: true, message: "选择地区不能为空", trigger: "blur" }
+        // ],
         detail: [
           { required: true, message: "详细地址不能为空", trigger: "blur" }
         ],
         sort: [
           { required: true, message: "排序(数字越小越靠前)不能为空", trigger: "blur" }
         ],
+      },
+      province_city_region: [],
+      provinceCityRegionOptions: [],
+      provinceCityRegionProps:{
+        label:'name',
+        value:'id',
+        children:'children'
       }
     };
   },
   created() {
     this.getList();
+    listRegion(null).then(response => {
+      this.provinceCityRegionOptions = this.handleTree(response.data, "id", "pid");
+      console.log(this.provinceCityRegionOptions)
+    });
   },
   methods: {
     /** 查询商家地址记录列表 */
     getList() {
-      // this.loading = true;
-      // listAddress(this.queryParams).then(response => {
-      //   this.addressList = response.rows;
-      //   this.total = response.total;
+      this.loading = true;
+      listAddress(this.queryParams).then(response => {
+        this.addressList = response.rows;
+        this.total = response.total;
         this.loading = false;
-      // });
+      });
     },
     // 取消按钮
     cancel() {
@@ -265,6 +292,7 @@ export default {
         createTime: null,
         updateTime: null
       };
+      this.province_city_region = {};
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -293,45 +321,54 @@ export default {
     handleUpdate(row) {
       this.reset();
       const addressId = row.addressId || this.ids
-      // getAddress(addressId).then(response => {
-      //   this.form = response.data;
-      //   this.open = true;
-      //   this.title = "修改商家地址记录";
-      // });
+      getAddress(addressId).then(response => {
+        this.form = response.data;
+        this.province_city_region = [this.form.provinceId,this.form.cityId,this.form.regionId];
+        this.open = true;
+        this.title = "修改商家地址记录";
+      });
     },
     /** 提交按钮 */
     submitForm() {
-      // this.$refs["form"].validate(valid => {
-      //   if (valid) {
-      //     if (this.form.addressId != null) {
-      //       updateAddress(this.form).then(response => {
-      //         this.$modal.msgSuccess("修改成功");
-      //         this.open = false;
-      //         this.getList();
-      //       });
-      //     } else {
-      //       addAddress(this.form).then(response => {
-      //         this.$modal.msgSuccess("新增成功");
-      //         this.open = false;
-      //         this.getList();
-      //       });
-      //     }
-      //   }
-      // });
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.province_city_region) {
+            this.form.provinceId = this.province_city_region[0];
+            this.form.cityId = this.province_city_region[1];
+            this.form.regionId = this.province_city_region[2];
+          } else {
+            this.$modal.msgError("请选择地区！");
+          }
+          console.log(JSON.stringify(this.form))
+          if (this.form.addressId != null) {
+            updateAddress(this.form).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+            });
+          } else {
+            addAddress(this.form).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+            });
+          }
+        }
+      });
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      // const addressIds = row.addressId || this.ids;
-      // this.$modal.confirm('是否确认删除商家地址记录编号为"' + addressIds + '"的数据项？').then(function() {
-      //   return delAddress(addressIds);
-      // }).then(() => {
-      //   this.getList();
-      //   this.$modal.msgSuccess("删除成功");
-      // }).catch(() => {});
+      const addressIds = row.addressId || this.ids;
+      this.$modal.confirm('是否确认删除商家地址记录编号为"' + addressIds + '"的数据项？').then(function() {
+        return delAddress(addressIds);
+      }).then(() => {
+        this.getList();
+        this.$modal.msgSuccess("删除成功");
+      }).catch(() => {});
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/address/export', {
+      this.download('store/address/export', {
         ...this.queryParams
       }, `address_${new Date().getTime()}.xlsx`)
     }

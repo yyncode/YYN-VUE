@@ -8,6 +8,7 @@ import cn.yyn.common.core.page.TableDataInfo;
 import cn.yyn.common.enums.BusinessType;
 import cn.yyn.store.domain.ShopStore;
 import cn.yyn.store.service.IStoreInfoService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,8 @@ public class StoreInfoController extends BaseController {
 
     @Resource
     private IStoreInfoService storeInfoService;
+
+
 
     /**
      * 查询商家(商户)记录列表
@@ -40,7 +43,17 @@ public class StoreInfoController extends BaseController {
     @GetMapping("get")
     public AjaxResult getInfo()
     {
-        return success(storeInfoService.selectShopStoreByStoreId(100001L));
+        return success(storeInfoService.selectShopStoreByStoreId());
+    }
+
+    /**
+     * 保存商家(商户)记录
+     */
+    @Log(title = "商家(商户)记录", businessType = BusinessType.INSERT)
+    @PostMapping("/save")
+    public AjaxResult save(@RequestBody ShopStore shopStore)
+    {
+        return toAjax(storeInfoService.saveShopStore(shopStore));
     }
 
     /**

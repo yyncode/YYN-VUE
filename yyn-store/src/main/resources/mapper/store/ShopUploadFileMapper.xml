@@ -55,7 +55,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectShopUploadFileVo"/>
         where file_id = #{fileId}
     </select>
-        
+    <select id="selectShopUploadFileInFileIds" resultMap="ShopUploadFileResult">
+        <include refid="selectShopUploadFileVo"/>
+        where file_id in
+        <foreach item="fileId" collection="array" open="(" separator="," close=")">
+            #{fileId}
+        </foreach>
+    </select>
+
     <insert id="insertShopUploadFile" parameterType="ShopUploadFile" useGeneratedKeys="true" keyProperty="fileId">
         insert into shop_upload_file
         <trim prefix="(" suffix=")" suffixOverrides=",">

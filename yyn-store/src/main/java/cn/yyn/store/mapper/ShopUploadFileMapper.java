@@ -59,4 +59,6 @@ public interface ShopUploadFileMapper
      * @return 结果
      */
     public int deleteShopUploadFileByFileIds(Long[] fileIds);
+
+    List<ShopUploadFile> selectShopUploadFileInFileIds(Long[] goodsImageIds);
 }

@@ -7,7 +7,9 @@ import cn.yyn.common.core.page.TableDataInfo;
 import cn.yyn.common.enums.BusinessType;
 import cn.yyn.common.utils.poi.ExcelUtil;
 import cn.yyn.store.domain.ShopGoods;
+import cn.yyn.store.dto.GoodsDto;
 import cn.yyn.store.service.IShopGoodsService;
+import com.alibaba.fastjson2.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -69,9 +71,10 @@ public class ShopGoodsController extends BaseController
     @PreAuthorize("@ss.hasPermi('goods:goods:add')")
     @Log(title = "商品记录", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ShopGoods shopGoods)
+    public AjaxResult add(@RequestBody GoodsDto goodsDto)
     {
-        return toAjax(shopGoodsService.insertShopGoods(shopGoods));
+        System.out.println(JSONObject.toJSONString(goodsDto));
+        return toAjax(shopGoodsService.insertShopGoods(goodsDto));
     }
 
     /**
@@ -80,9 +83,9 @@ public class ShopGoodsController extends BaseController
     @PreAuthorize("@ss.hasPermi('goods:goods:edit')")
     @Log(title = "商品记录", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ShopGoods shopGoods)
+    public AjaxResult edit(@RequestBody GoodsDto goodsDto)
     {
-        return toAjax(shopGoodsService.updateShopGoods(shopGoods));
+        return toAjax(shopGoodsService.updateShopGoods(goodsDto));
     }
 
     /**

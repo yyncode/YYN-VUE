@@ -63,6 +63,12 @@ public class ShopGoods extends BaseEntity
     /** 商品详情 */
     @Excel(name = "商品详情")
     private String content;
+    /** 商品头图 */
+    @Excel(name = "商品头图")
+    private Long firstImageId;
+    /** 商品头图 */
+    @Excel(name = "商品头图")
+    private String firstImageUrl;
 
     /** 初始销量 */
     @Excel(name = "初始销量")
@@ -233,7 +239,23 @@ public class ShopGoods extends BaseEntity
         this.salesInitial = salesInitial;
     }
 
-    public Long getSalesInitial() 
+    public Long getFirstImageId() {
+        return firstImageId;
+    }
+
+    public void setFirstImageId(Long firstImageId) {
+        this.firstImageId = firstImageId;
+    }
+
+    public String getFirstImageUrl() {
+        return firstImageUrl;
+    }
+
+    public void setFirstImageUrl(String firstImageUrl) {
+        this.firstImageUrl = firstImageUrl;
+    }
+
+    public Long getSalesInitial()
     {
         return salesInitial;
     }

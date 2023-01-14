@@ -15,10 +15,9 @@ public interface IStoreInfoService {
     /**
      * 查询商家(商户)记录
      *
-     * @param storeId 商家(商户)记录主键
      * @return 商家(商户)记录
      */
-    public ShopStore selectShopStoreByStoreId(Long storeId);
+    public ShopStore selectShopStoreByStoreId();
 
     /**
      * 新增商家(商户)记录
@@ -51,4 +50,11 @@ public interface IStoreInfoService {
      * @return 结果
      */
     public int deleteShopStoreByStoreId(Long storeId);
+
+    /**
+     * 保存商家(商户)记录
+     * @param shopStore 商家(商户)记录
+     * @return
+     */
+    int saveShopStore(ShopStore shopStore);
 }

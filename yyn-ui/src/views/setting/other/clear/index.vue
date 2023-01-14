@@ -1,15 +1,29 @@
 <template>
 <div class="app-container">
-  <el-form :form="form" @submit="handleSubmit">
-    <el-form-item label="缓存项目">
-      <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-        <el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
-      </el-checkbox-group>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" html-type="submit">提交</el-button>
-    </el-form-item>
-  </el-form>
+  <div class="other-clear">
+    <div class="form-item-group">
+      <div class="form-item">
+          <span class="form-item-label" ><span style="color: red">*</span>
+        缓存项目：
+      </span>
+        <div class="form-item-content">
+          <div class="form-item-checkbox">
+            <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+              <el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
+            </el-checkbox-group>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-item-group ">
+      <div class="form-item">
+        <div class="form-item-btn">
+          <el-button type="primary" >提交</el-button>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
 </template>
 
@@ -56,5 +70,20 @@ export default {
 </script>
 
 <style scoped>
+.other-clear .form-item-group .form-item{
+  display: flex;
+  margin-top: 40px;
+  margin-left: 40px;
+}
 
+.other-clear .form-item-group .form-item .form-item-label {
+  margin-left: 5px;
+  margin-right: 10px;
+  font-size: 13px;
+  width: 150px;
+  text-align: right;
+}
+.other-clear .form-item-group .form-item  .form-item-btn {
+  margin-left: 165px;
+}
 </style>

@@ -76,16 +76,22 @@
     <el-table v-loading="loading" :data="goodsList" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="55"/>
       <el-table-column align="center" label="商品ID" prop="goodsId"/>
-      <el-table-column label="商品图片" align="center" prop="goodsName">
+      <el-table-column label="商品图片" align="center" prop="firstImageUrl">
         <template slot-scope="scope">
-          <image-preview :src="scope.row.images[0].cover" :width="50" :height="50"/>
+          <image-preview :src="scope.row.firstImageUrl" :width="50" :height="50"/>
         </template>
       </el-table-column>
       <el-table-column align="center" label="商品名称" prop="goodsName"/>
       <el-table-column align="center" label="商品价格" prop="goodsPriceMin"/>
+      <el-table-column align="center" label="总销量">
+        <template slot-scope="scope">
+          {{scope.row.salesInitial + scope.row.salesActual}}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="库存总量" prop="stockTotal"/>
-      <el-table-column align="center" label="初始销量" prop="salesInitial"/>
-      <el-table-column align="center" label="实际销量" prop="salesActual"/>
+
+<!--      <el-table-column align="center" label="初始销量" prop="salesInitial"/>-->
+<!--      <el-table-column align="center" label="实际销量" prop="salesActual"/>-->
       <el-table-column label="商品状态" align="center" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.goods_status" :value="scope.row.status"/>
@@ -133,13 +139,13 @@
               <el-input v-model="form.goodsName" placeholder="请输入商品名称"/>
             </el-form-item>
 
-            <el-form-item label="商品分类" prop="goodCategories">
+            <el-form-item label="商品分类" prop="goodCategoryIds">
               <treeselect v-model="form.goodCategoryIds" :flat="true" :multiple="true" :normalizer="normalizer"
                           :options="categoryOptions" placeholder="请选择商品分类"/>
             </el-form-item>
 
             <el-form-item label="商品图片" prop="goodImageIds">
-              <select-image :defaultList="formImages" :defaultClickType="clickType"
+              <select-image :defaultList="form.goodImages" :defaultClickType="clickType"
                             v-model="form.goodImageIds" :maxNum="10" :multiple="true" :width="50"/>
             </el-form-item>
 
@@ -201,7 +207,11 @@
               <el-input-number v-model="form.goodsWeight" :min="0" :precision="2" placeholder="请输入商品重量"/>
             </el-form-item>
             <div>
-              <MultiSpec v-if="form.specType === 20" ref="MultiSpec"/>
+              <MultiSpec v-if="form.specType === 20"
+                         ref="MultiSpec"
+                         :defaultSpecList="form.specData?form.specData.specList:[]"
+                         :defaultSkuList="form.specData?form.specData.skuList:[]"
+              />
             </div>
             <!--            <el-form-item label="商品规格" v-if="form.specType === 20">-->
             <!--              <el-button type="primary">添加规格组</el-button>-->
@@ -308,7 +318,7 @@
 </template>
 
 <script>
-import {delGoods, getGoods, listGoods} from "@/api/goods/goods";
+import {addGoods, delGoods, getGoods, listGoods, updateGoods} from "@/api/goods/goods";
 import {listDeliveryNoPage} from "@/api/setting/delivery/template"
 import {listCategory} from "@/api/goods/category";
 import {listServiceNoPage} from "@/api/goods/service"
@@ -464,6 +474,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
+      this.activeName = "first";
       this.reset();
     },
     // 表单重置
@@ -515,6 +526,7 @@ export default {
         //会员折扣设置
         isAloneGrade: 0,
       };
+      this.activeName = "first";
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -557,22 +569,41 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid,obj) => {
         if (valid) {
+
+          // 验证多规格
+          if (this.form.specType === 20) {
+            const MultiSpec = this.$refs.MultiSpec
+            if (!MultiSpec.verifyForm()) {
+              this.$modal.msgError("多规格校验失败！");
+              return false
+            }
+            // 记录多规格数据
+            this.form.specData = MultiSpec.getFromSpecData()
+          }
           console.log(JSON.stringify(this.form))
-          // if (this.form.goodsId != null) {
-          //   updateGoods(this.form).then(response => {
-          //     this.$modal.msgSuccess("修改成功");
-          //     this.open = false;
-          //     this.getList();
-          //   });
-          // } else {
-          //   addGoods(this.form).then(response => {
-          //     this.$modal.msgSuccess("新增成功");
-          //     this.open = false;
-          //     this.getList();
-          //   });
-          // }
+          if (this.form.goodsId != null) {
+            updateGoods(this.form).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+            });
+          } else {
+            addGoods(this.form).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+            });
+          }
+        } else {
+          console.log(JSON.stringify(obj))
+          let a = [];
+          for (let key in obj) {
+            a.push(obj[key][0].message);
+          }
+          this.$modal.msgWarning(a[0])
+          return false;
         }
       });
     },

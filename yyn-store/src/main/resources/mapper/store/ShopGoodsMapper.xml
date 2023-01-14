@@ -17,6 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="stockTotal"    column="stock_total"    />
         <result property="deductStockType"    column="deduct_stock_type"    />
         <result property="content"    column="content"    />
+        <result property="firstImageId"    column="first_image_id"    />
         <result property="salesInitial"    column="sales_initial"    />
         <result property="salesActual"    column="sales_actual"    />
         <result property="deliveryId"    column="delivery_id"    />
@@ -36,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectShopGoodsVo">
-        select goods_id, goods_name, goods_no, selling_point, spec_type, goods_price_min, goods_price_max, line_price_min, line_price_max, stock_total, deduct_stock_type, content, sales_initial, sales_actual, delivery_id, is_points_gift, is_points_discount, is_alone_points_discount, points_discount_config, is_enable_grade, is_alone_grade, alone_grade_equity, status, sort, is_delete, store_id, create_time, update_time from shop_goods
+        select goods_id, goods_name, goods_no, selling_point, spec_type, goods_price_min, goods_price_max, line_price_min, line_price_max, stock_total, deduct_stock_type, content, first_image_id, sales_initial, sales_actual, delivery_id, is_points_gift, is_points_discount, is_alone_points_discount, points_discount_config, is_enable_grade, is_alone_grade, alone_grade_equity, status, sort, is_delete, store_id, create_time, update_time from shop_goods
     </sql>
 
     <select id="selectShopGoodsList" parameterType="ShopGoods" resultMap="ShopGoodsResult">
@@ -53,6 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stockTotal != null "> and stock_total = #{stockTotal}</if>
             <if test="deductStockType != null "> and deduct_stock_type = #{deductStockType}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="firstImageId != null  and firstImageId != ''"> and first_image_id = #{firstImageId}</if>
             <if test="salesInitial != null "> and sales_initial = #{salesInitial}</if>
             <if test="salesActual != null "> and sales_actual = #{salesActual}</if>
             <if test="deliveryId != null "> and delivery_id = #{deliveryId}</if>
@@ -89,6 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stockTotal != null">stock_total,</if>
             <if test="deductStockType != null">deduct_stock_type,</if>
             <if test="content != null and content != ''">content,</if>
+            <if test="firstImageId != null and firstImageId != ''">first_image_id,</if>
             <if test="salesInitial != null">sales_initial,</if>
             <if test="salesActual != null">sales_actual,</if>
             <if test="deliveryId != null">delivery_id,</if>
@@ -118,6 +121,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stockTotal != null">#{stockTotal},</if>
             <if test="deductStockType != null">#{deductStockType},</if>
             <if test="content != null and content != ''">#{content},</if>
+            <if test="firstImageId != null and firstImageId != ''">#{firstImageId},</if>
             <if test="salesInitial != null">#{salesInitial},</if>
             <if test="salesActual != null">#{salesActual},</if>
             <if test="deliveryId != null">#{deliveryId},</if>
@@ -151,6 +155,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stockTotal != null">stock_total = #{stockTotal},</if>
             <if test="deductStockType != null">deduct_stock_type = #{deductStockType},</if>
             <if test="content != null and content != ''">content = #{content},</if>
+            <if test="firstImageId != null and firstImageId != ''">first_image_id = #{firstImageId},</if>
             <if test="salesInitial != null">sales_initial = #{salesInitial},</if>
             <if test="salesActual != null">sales_actual = #{salesActual},</if>
             <if test="deliveryId != null">delivery_id = #{deliveryId},</if>

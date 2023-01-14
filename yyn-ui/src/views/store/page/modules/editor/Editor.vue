@@ -7,7 +7,7 @@
       </div>
       <!-- 编辑器: 标题栏 -->
       <div v-if="selectedIndex === 'page'" class="editor-content">
-        <el-tabs :stretch="true">
+        <el-tabs :stretch="true" :value="'first'">
           <el-tab-pane label="页面设置" name="first">
             <div class="block-box">
               <div class="block-title">基本信息</div>
@@ -51,7 +51,7 @@
                   class="rest-color"
                   @click="onEditorResetColor(data.page.style, 'titleBackgroundColor', '#fff')"
                 >重置</span>
-                  <el-color-picker v-model="data.page.style.titleBackgroundColor" predefine="#fff" />
+                  <el-color-picker v-model="data.page.style.titleBackgroundColor" :predefine="['#fff']" />
                 </div>
               </div>
             </div>
@@ -117,7 +117,7 @@
                 class="rest-color"
                 @click="onEditorResetColor(curItem.style, 'background', '#fff')"
               >重置</span>
-                <el-color-picker v-model="curItem.style.background" predefine="#fff" />
+                <el-color-picker v-model="curItem.style.background" :predefine="['#fff']" />
               </div>
             </div>
           </div>
@@ -142,7 +142,7 @@
                 class="rest-color"
                 @click="onEditorResetColor(curItem.style, 'lineColor', '#000')"
               >重置</span>
-                <el-color-picker v-model="curItem.style.lineColor" predefine="#000" />
+                <el-color-picker v-model="curItem.style.lineColor" :predefine="['#000']" />
               </div>
             </div>
             <div class="block-item">
@@ -172,7 +172,7 @@
                 class="rest-color"
                 @click="onEditorResetColor(curItem.style, 'background', '#fff')"
               >重置</span>
-                <el-color-picker v-model="curItem.style.background" predefine="#fff" />
+                <el-color-picker v-model="curItem.style.background" :predefine="['#fff']" />
               </div>
             </div>
           </div>
@@ -219,7 +219,7 @@
                     class="rest-color"
                     @click="onEditorResetColor(curItem.style, 'background', '#fff')"
                   >重置</span>
-                    <el-color-picker v-model="curItem.style.background" predefine="#fff" />
+                    <el-color-picker v-model="curItem.style.background" :predefine="['#fff']" />
                   </div>
                 </div>
               </div>
@@ -255,7 +255,7 @@
                     class="rest-color"
                     @click="onEditorResetColor(curItem.style, 'textColor', '#000')"
                   >重置</span>
-                    <el-color-picker v-model="curItem.style.textColor" predefine="#000" />
+                    <el-color-picker v-model="curItem.style.textColor" :predefine="['#000']" />
                   </div>
                 </div>
                 <div class="block-item">
@@ -265,7 +265,7 @@
                     class="rest-color"
                     @click="onEditorResetColor(curItem.style, 'background', '#fff')"
                   >重置</span>
-                    <el-color-picker v-model="curItem.style.background" predefine="#fff" />
+                    <el-color-picker v-model="curItem.style.background" :predefine="['#fff']" />
                   </div>
                 </div>
               </div>
@@ -504,7 +504,7 @@
                     class="rest-color"
                     @click="onEditorResetColor(curItem.style, 'background', '#fff')"
                   >重置</span>
-                    <el-color-picker v-model="curItem.style.background" predefine="#fff" />
+                    <el-color-picker v-model="curItem.style.background" :predefine="['#fff']" />
                   </div>
                 </div>
               </div>
@@ -514,8 +514,8 @@
 
         <!-- 轮播图 -->
         <div v-if="curItem.type === 'banner'" class="editor-content">
-          <el-tabs>
-            <el-tab-pane key="1" tab="内容设置">
+          <el-tabs :stretch="true" :value="'first'">
+            <el-tab-pane  name="first" label="内容设置">
               <div class="sub-title">添加图片 (最多10张，可拖动排序）</div>
               <draggable
                 :list="curItem.data"
@@ -551,7 +551,7 @@
                 <el-button icon="plus" @click="handleAddData(10)">添加图片</el-button>
               </div>
             </el-tab-pane>
-            <el-tab-pane key="2" tab="样式设置">
+            <el-tab-pane name="second" label="样式设置">
               <div class="block-box">
                 <div class="block-title">内容样式</div>
                 <div class="block-item">
@@ -569,13 +569,13 @@
                     class="rest-color"
                     @click="onEditorResetColor(curItem.style, 'btnColor', '#fff')"
                   >重置</span>
-                    <el-color-picker v-model="curItem.style.btnColor" predefine="#fff" />
+                    <el-color-picker v-model="curItem.style.btnColor" :predefine="['#fff']" />
                   </div>
                 </div>
                 <div class="block-item">
                   <span class="label">切换时间</span>
                   <div class="item-slider" style="width: 190px;">
-                    <el-slider v-model="curItem.style.interval" :step="1" :min="1" :max="20" />
+                    <el-slider v-model="curItem.style.interval" :min="1" :max="20"/>
                     <span class="unit-text">
                     <span>{{ curItem.style.interval }}</span>
                     <span>秒</span>
@@ -671,7 +671,7 @@
                     class="rest-color"
                     @click="onEditorResetColor(curItem.style, 'background', '#fff')"
                   >重置</span>
-                    <el-color-picker v-model="curItem.style.background" predefine="#fff" />
+                    <el-color-picker v-model="curItem.style.background" :predefine="['#fff']" />
                   </div>
                 </div>
               </div>
@@ -732,7 +732,7 @@
                     class="rest-color"
                     @click="onEditorResetColor(curItem.style, 'textColor', '#000')"
                   >重置</span>
-                    <el-color-picker v-model="curItem.style.textColor" predefine="#000" />
+                    <el-color-picker v-model="curItem.style.textColor" :predefine="['#000']" />
                   </div>
                 </div>
               </div>
@@ -755,7 +755,7 @@
                     class="rest-color"
                     @click="onEditorResetColor(curItem.style, 'background', '#fff')"
                   >重置</span>
-                    <el-color-picker v-model="curItem.style.background" predefine="#fff" />
+                    <el-color-picker v-model="curItem.style.background" :predefine="['#fff']" />
                   </div>
                 </div>
               </div>
@@ -840,7 +840,7 @@
                     class="rest-color"
                     @click="onEditorResetColor(curItem.style, 'background', '#fff')"
                   >重置</span>
-                    <el-color-picker v-model="curItem.style.background" predefine="#fff" />
+                    <el-color-picker v-model="curItem.style.background" :predefine="['#fff']" />
                   </div>
                 </div>
               </div>
@@ -1038,17 +1038,8 @@ export default {
 .item-checkbox .ant-checkbox-wrapper + .ant-checkbox-wrapper {
   margin-left: 0;
 }
-.item-slider {
-  width: 100%;
-  display: flex;
-}
-.item-slider .ant-slider {
-  flex: 1;
-  margin: 10px 10px 10px 6px;
-}
-.item-slider .ant-slider /deep/ .ant-slider-rail {
-  background: #dfdfe1;
-}
+
+
 .unit-text {
   padding: 0 10px;
   line-height: 32px;

@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询商家(商户)记录列表
 export function listStore(query) {
   return request({
-    url: '/system/store/list',
+    url: '/store/info/list',
     method: 'get',
     params: query
   })
@@ -12,15 +12,24 @@ export function listStore(query) {
 // 查询商家(商户)记录详细
 export function getStoreDetail() {
   return request({
-    url: '/store/detail/get',
+    url: '/store/info/get',
     method: 'get'
+  })
+}
+
+// 保存商家(商户)记录
+export function saveStore(data) {
+  return request({
+    url: '/store/info/save',
+    method: 'post',
+    data: data
   })
 }
 
 // 新增商家(商户)记录
 export function addStore(data) {
   return request({
-    url: '/system/store',
+    url: '/store/info',
     method: 'post',
     data: data
   })
@@ -29,7 +38,7 @@ export function addStore(data) {
 // 修改商家(商户)记录
 export function updateStore(data) {
   return request({
-    url: '/system/store',
+    url: '/store/info',
     method: 'put',
     data: data
   })
@@ -38,7 +47,7 @@ export function updateStore(data) {
 // 删除商家(商户)记录
 export function delStore(storeId) {
   return request({
-    url: '/system/store/' + storeId,
+    url: '/store/info/' + storeId,
     method: 'delete'
   })
 }

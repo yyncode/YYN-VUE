@@ -39,7 +39,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectShopCategoryVo"/>
         where category_id = #{categoryId}
     </select>
-        
+    <select id="selectShopCategoryByCategoryIds" resultMap="ShopCategoryResult">
+        <include refid="selectShopCategoryVo"/>
+        WHERE category_id in
+        <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
     <insert id="insertShopCategory" parameterType="ShopCategory" useGeneratedKeys="true" keyProperty="categoryId">
         insert into shop_category
         <trim prefix="(" suffix=")" suffixOverrides=",">

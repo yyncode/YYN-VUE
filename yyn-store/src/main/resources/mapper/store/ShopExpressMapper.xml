@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yyn.store.mapper.ShopExpressMapper">
+    
+    <resultMap type="ShopExpress" id="ShopExpressResult">
+        <result property="expressId"    column="express_id"    />
+        <result property="expressName"    column="express_name"    />
+        <result property="kuaidi100Code"    column="kuaidi100_code"    />
+        <result property="sort"    column="sort"    />
+        <result property="storeId"    column="store_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectShopExpressVo">
+        select express_id, express_name, kuaidi100_code, sort, store_id, create_by, create_time, update_by, update_time, remark from shop_express
+    </sql>
+
+    <select id="selectShopExpressList" parameterType="ShopExpress" resultMap="ShopExpressResult">
+        <include refid="selectShopExpressVo"/>
+        <where>  
+            <if test="expressName != null  and expressName != ''"> and express_name like concat('%', #{expressName}, '%')</if>
+            <if test="kuaidi100Code != null  and kuaidi100Code != ''"> and kuaidi100_code = #{kuaidi100Code}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="storeId != null "> and store_id = #{storeId}</if>
+        </where>
+    </select>
+    
+    <select id="selectShopExpressByExpressId" parameterType="Long" resultMap="ShopExpressResult">
+        <include refid="selectShopExpressVo"/>
+        where express_id = #{expressId}
+    </select>
+        
+    <insert id="insertShopExpress" parameterType="ShopExpress" useGeneratedKeys="true" keyProperty="expressId">
+        insert into shop_express
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="expressName != null and expressName != ''">express_name,</if>
+            <if test="kuaidi100Code != null and kuaidi100Code != ''">kuaidi100_code,</if>
+            <if test="sort != null">sort,</if>
+            <if test="storeId != null">store_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="expressName != null and expressName != ''">#{expressName},</if>
+            <if test="kuaidi100Code != null and kuaidi100Code != ''">#{kuaidi100Code},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="storeId != null">#{storeId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShopExpress" parameterType="ShopExpress">
+        update shop_express
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="expressName != null and expressName != ''">express_name = #{expressName},</if>
+            <if test="kuaidi100Code != null and kuaidi100Code != ''">kuaidi100_code = #{kuaidi100Code},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where express_id = #{expressId}
+    </update>
+
+    <delete id="deleteShopExpressByExpressId" parameterType="Long">
+        delete from shop_express where express_id = #{expressId}
+    </delete>
+
+    <delete id="deleteShopExpressByExpressIds" parameterType="String">
+        delete from shop_express where express_id in 
+        <foreach item="expressId" collection="array" open="(" separator="," close=")">
+            #{expressId}
+        </foreach>
+    </delete>
+</mapper>

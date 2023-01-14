@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yyn.store.mapper.ShopGoodsServiceRelMapper">
+    
+    <resultMap type="ShopGoodsServiceRel" id="ShopGoodsServiceRelResult">
+        <result property="id"    column="id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="serviceId"    column="service_id"    />
+        <result property="storeId"    column="store_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectShopGoodsServiceRelVo">
+        select id, goods_id, service_id, store_id, create_by, create_time, update_by, update_time, remark from shop_goods_service_rel
+    </sql>
+
+    <select id="selectShopGoodsServiceRelList" parameterType="ShopGoodsServiceRel" resultMap="ShopGoodsServiceRelResult">
+        <include refid="selectShopGoodsServiceRelVo"/>
+        <where>  
+            <if test="goodsId != null "> and goods_id = #{goodsId}</if>
+            <if test="serviceId != null "> and service_id = #{serviceId}</if>
+            <if test="storeId != null "> and store_id = #{storeId}</if>
+        </where>
+    </select>
+    
+    <select id="selectShopGoodsServiceRelById" parameterType="Long" resultMap="ShopGoodsServiceRelResult">
+        <include refid="selectShopGoodsServiceRelVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectShopGoodsServiceRelByGoodsId" resultType="java.lang.Long">
+        select service_id from shop_goods_service_rel where goods_id = #{goodsId}
+    </select>
+
+    <insert id="insertShopGoodsServiceRel" parameterType="ShopGoodsServiceRel" useGeneratedKeys="true" keyProperty="id">
+        insert into shop_goods_service_rel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null">goods_id,</if>
+            <if test="serviceId != null">service_id,</if>
+            <if test="storeId != null">store_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="serviceId != null">#{serviceId},</if>
+            <if test="storeId != null">#{storeId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShopGoodsServiceRel" parameterType="ShopGoodsServiceRel">
+        update shop_goods_service_rel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="serviceId != null">service_id = #{serviceId},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteShopGoodsServiceRelById" parameterType="Long">
+        delete from shop_goods_service_rel where id = #{id}
+    </delete>
+
+    <delete id="deleteShopGoodsServiceRelByIds" parameterType="String">
+        delete from shop_goods_service_rel where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteShopGoodsServiceRelByGoodsId">
+        delete from shop_goods_service_rel where goods_id = #{goodsId}
+    </delete>
+</mapper>

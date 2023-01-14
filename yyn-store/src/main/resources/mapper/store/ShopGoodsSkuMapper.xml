@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yyn.store.mapper.ShopGoodsSkuMapper">
+    
+    <resultMap type="ShopGoodsSku" id="ShopGoodsSkuResult">
+        <result property="id"    column="id"    />
+        <result property="goodsSkuId"    column="goods_sku_id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="imageId"    column="image_id"    />
+        <result property="goodsSkuNo"    column="goods_sku_no"    />
+        <result property="goodsPrice"    column="goods_price"    />
+        <result property="linePrice"    column="line_price"    />
+        <result property="stockNum"    column="stock_num"    />
+        <result property="goodsWeight"    column="goods_weight"    />
+        <result property="goodsProps"    column="goods_props"    />
+        <result property="specValueIds"    column="spec_value_ids"    />
+        <result property="storeId"    column="store_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectShopGoodsSkuVo">
+        select id, goods_sku_id, goods_id, image_id, goods_sku_no, goods_price, line_price, stock_num, goods_weight, goods_props, spec_value_ids, store_id, create_by, create_time, update_by, update_time, remark from shop_goods_sku
+    </sql>
+
+    <select id="selectShopGoodsSkuList" parameterType="ShopGoodsSku" resultMap="ShopGoodsSkuResult">
+        <include refid="selectShopGoodsSkuVo"/>
+        <where>  
+            <if test="goodsSkuId != null  and goodsSkuId != ''"> and goods_sku_id = #{goodsSkuId}</if>
+            <if test="goodsId != null "> and goods_id = #{goodsId}</if>
+            <if test="imageId != null "> and image_id = #{imageId}</if>
+            <if test="goodsSkuNo != null  and goodsSkuNo != ''"> and goods_sku_no = #{goodsSkuNo}</if>
+            <if test="goodsPrice != null "> and goods_price = #{goodsPrice}</if>
+            <if test="linePrice != null "> and line_price = #{linePrice}</if>
+            <if test="stockNum != null "> and stock_num = #{stockNum}</if>
+            <if test="goodsWeight != null "> and goods_weight = #{goodsWeight}</if>
+            <if test="goodsProps != null  and goodsProps != ''"> and goods_props = #{goodsProps}</if>
+            <if test="specValueIds != null  and specValueIds != ''"> and spec_value_ids = #{specValueIds}</if>
+            <if test="storeId != null "> and store_id = #{storeId}</if>
+        </where>
+    </select>
+    
+    <select id="selectShopGoodsSkuById" parameterType="Long" resultMap="ShopGoodsSkuResult">
+        <include refid="selectShopGoodsSkuVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectShopGoodsSkuByGoodsId" resultMap="ShopGoodsSkuResult">
+        <include refid="selectShopGoodsSkuVo"/>
+        where goods_id = #{goodsId}
+    </select>
+
+    <insert id="insertShopGoodsSku" parameterType="ShopGoodsSku" useGeneratedKeys="true" keyProperty="id">
+        insert into shop_goods_sku
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsSkuId != null and goodsSkuId != ''">goods_sku_id,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="imageId != null">image_id,</if>
+            <if test="goodsSkuNo != null and goodsSkuNo != ''">goods_sku_no,</if>
+            <if test="goodsPrice != null">goods_price,</if>
+            <if test="linePrice != null">line_price,</if>
+            <if test="stockNum != null">stock_num,</if>
+            <if test="goodsWeight != null">goods_weight,</if>
+            <if test="goodsProps != null and goodsProps != ''">goods_props,</if>
+            <if test="specValueIds != null and specValueIds != ''">spec_value_ids,</if>
+            <if test="storeId != null">store_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsSkuId != null and goodsSkuId != ''">#{goodsSkuId},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="imageId != null">#{imageId},</if>
+            <if test="goodsSkuNo != null and goodsSkuNo != ''">#{goodsSkuNo},</if>
+            <if test="goodsPrice != null">#{goodsPrice},</if>
+            <if test="linePrice != null">#{linePrice},</if>
+            <if test="stockNum != null">#{stockNum},</if>
+            <if test="goodsWeight != null">#{goodsWeight},</if>
+            <if test="goodsProps != null and goodsProps != ''">#{goodsProps},</if>
+            <if test="specValueIds != null and specValueIds != ''">#{specValueIds},</if>
+            <if test="storeId != null">#{storeId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShopGoodsSku" parameterType="ShopGoodsSku">
+        update shop_goods_sku
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsSkuId != null and goodsSkuId != ''">goods_sku_id = #{goodsSkuId},</if>
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="imageId != null">image_id = #{imageId},</if>
+            <if test="goodsSkuNo != null and goodsSkuNo != ''">goods_sku_no = #{goodsSkuNo},</if>
+            <if test="goodsPrice != null">goods_price = #{goodsPrice},</if>
+            <if test="linePrice != null">line_price = #{linePrice},</if>
+            <if test="stockNum != null">stock_num = #{stockNum},</if>
+            <if test="goodsWeight != null">goods_weight = #{goodsWeight},</if>
+            <if test="goodsProps != null and goodsProps != ''">goods_props = #{goodsProps},</if>
+            <if test="specValueIds != null and specValueIds != ''">spec_value_ids = #{specValueIds},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteShopGoodsSkuById" parameterType="Long">
+        delete from shop_goods_sku where id = #{id}
+    </delete>
+
+    <delete id="deleteShopGoodsSkuByIds" parameterType="String">
+        delete from shop_goods_sku where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteShopGoodsSkuByGoodsId">
+        delete from shop_goods_sku where goods_id = #{goodsId}
+    </delete>
+</mapper>

@@ -116,7 +116,7 @@
           <template slot-scope="scope">
             <SelectImage
               v-model="scope.row.imageId"
-              :defaultList="(scope.row.imageId > 0 && scope.row.image) ? [scope.row.image] : []"
+              :defaultList="(scope.row.imageId > 0 && scope.row.image) ? scope.row.image : []"
               :width="50"
             />
           </template>

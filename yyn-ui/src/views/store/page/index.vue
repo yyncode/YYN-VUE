@@ -9,22 +9,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="商城ID" prop="storeId">
-        <el-input
-          v-model="queryParams.storeId"
-          placeholder="请输入商城ID"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="软删除" prop="isDelete">
-        <el-input
-          v-model="queryParams.isDelete"
-          placeholder="请输入软删除"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -39,7 +23,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:page:add']"
+          v-hasPermi="['store:page:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -50,7 +34,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:page:edit']"
+          v-hasPermi="['store:page:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -61,7 +45,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:page:remove']"
+          v-hasPermi="['store:page:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -71,7 +55,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:page:export']"
+          v-hasPermi="['store:page:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -80,12 +64,14 @@
     <el-table v-loading="loading" :data="pageList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="页面ID" align="center" prop="pageId" />
-      <el-table-column label="页面类型(10首页 20自定义页)" align="center" prop="pageType" />
       <el-table-column label="页面名称" align="center" prop="pageName" />
-      <el-table-column label="页面数据" align="center" prop="pageData" />
-      <el-table-column label="商城ID" align="center" prop="storeId" />
-      <el-table-column label="软删除" align="center" prop="isDelete" />
-      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="页面类型" align="center" prop="pageType">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.shop_page_type" :value="scope.row.pageType"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="添加时间" align="center" prop="createTime" />
+      <el-table-column label="更新时间" align="center" prop="updateTime" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -93,14 +79,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:page:edit']"
+            v-hasPermi="['store:page:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:page:remove']"
+            v-hasPermi="['store:page:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -113,38 +99,15 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
-    <!-- 添加或修改店铺页面记录对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="页面名称" prop="pageName">
-          <el-input v-model="form.pageName" placeholder="请输入页面名称" />
-        </el-form-item>
-        <el-form-item label="页面数据" prop="pageData">
-          <el-input v-model="form.pageData" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="商城ID" prop="storeId">
-          <el-input v-model="form.storeId" placeholder="请输入商城ID" />
-        </el-form-item>
-        <el-form-item label="软删除" prop="isDelete">
-          <el-input v-model="form.isDelete" placeholder="请输入软删除" />
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
+import {listPage} from "@/api/store/page";
 
 export default {
   name: "Page",
+  dicts: ['shop_page_type'],
   data() {
     return {
       // 遮罩层
@@ -161,40 +124,12 @@ export default {
       total: 0,
       // 店铺页面记录表格数据
       pageList: [],
-      // 弹出层标题
-      title: "",
-      // 是否显示弹出层
-      open: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        pageType: null,
-        pageName: null,
-        pageData: null,
-        storeId: null,
-        isDelete: null,
+        pageName: null
       },
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {
-        pageType: [
-          { required: true, message: "页面类型(10首页 20自定义页)不能为空", trigger: "change" }
-        ],
-        pageName: [
-          { required: true, message: "页面名称不能为空", trigger: "blur" }
-        ],
-        pageData: [
-          { required: true, message: "页面数据不能为空", trigger: "blur" }
-        ],
-        storeId: [
-          { required: true, message: "商城ID不能为空", trigger: "blur" }
-        ],
-        isDelete: [
-          { required: true, message: "软删除不能为空", trigger: "blur" }
-        ],
-      }
     };
   },
   created() {
@@ -203,34 +138,12 @@ export default {
   methods: {
     /** 查询店铺页面记录列表 */
     getList() {
-      // this.loading = true;
-      // listPage(this.queryParams).then(response => {
-      //   this.pageList = response.rows;
-      //   this.total = response.total;
+      this.loading = true;
+      listPage(this.queryParams).then(response => {
+        this.pageList = response.rows;
+        this.total = response.total;
         this.loading = false;
-      // });
-    },
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
-    // 表单重置
-    reset() {
-      this.form = {
-        pageId: null,
-        pageType: null,
-        pageName: null,
-        pageData: null,
-        storeId: null,
-        isDelete: null,
-        createBy: null,
-        createTime: null,
-        updateBy: null,
-        updateTime: null,
-        remark: null
-      };
-      this.resetForm("form");
+      });
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -251,39 +164,10 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.$router.push('/store/store-page/create')
-      // this.reset();
-      // this.open = true;
-      // this.title = "添加店铺页面记录";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
-      const pageId = row.pageId || this.ids
-      // getPage(pageId).then(response => {
-      //   this.form = response.data;
-      //   this.open = true;
-      //   this.title = "修改店铺页面记录";
-      // });
-    },
-    /** 提交按钮 */
-    submitForm() {
-      // this.$refs["form"].validate(valid => {
-      //   if (valid) {
-      //     if (this.form.pageId != null) {
-      //       updatePage(this.form).then(response => {
-      //         this.$modal.msgSuccess("修改成功");
-      //         this.open = false;
-      //         this.getList();
-      //       });
-      //     } else {
-      //       addPage(this.form).then(response => {
-      //         this.$modal.msgSuccess("新增成功");
-      //         this.open = false;
-      //         this.getList();
-      //       });
-      //     }
-      //   }
-      // });
+
     },
     /** 删除按钮操作 */
     handleDelete(row) {
@@ -297,7 +181,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/page/export', {
+      this.download('store/page/export', {
         ...this.queryParams
       }, `page_${new Date().getTime()}.xlsx`)
     }

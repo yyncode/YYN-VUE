@@ -1,98 +1,130 @@
 <template>
   <div class="app-container">
-    <div class="content">
-      <el-form :form="form" @submit="handleSubmit">
-        <el-form-item label="未支付订单:">
-          <div>
+    <div class="trade">
+      <div class="form-item">
+        <span style="color: red;padding-top: 4px">*</span>
+        <span class="form-item-input-label">
+        未支付订单：</span>
+        <div class="form-item-content">
+          <div class="form-item-input">
             <el-input-number
               :min="0"
               :precision="0"
+              controls-position="right"
+              size="mini"
+              v-model="form.order.closeDays"
             />
             <span class="input-text_right">小时后自动关闭</span>
+<!--            <el-radio v-model="form.registerMethod">手机号 + 短信验证码</el-radio>-->
           </div>
           <div class="form-item-help">
-            <p class="extra">如果在期间订单未付款，系统自动关闭，设置0小时不自动关闭</p>
+            <p class="extra">如果在期间订单未付款，系统自动关闭，设置0天不自动关闭</p>
           </div>
-        </el-form-item>
-        <el-form-item label="已发货订单:">
-          <div>
+        </div>
+      </div>
+      <div class="form-item">
+        <span style="color: red;padding-top: 4px">*</span>
+        <span class="form-item-input-label">
+        已发货订单：</span>
+        <div class="form-item-content">
+          <div class="form-item-input">
             <el-input-number
               :min="0"
               :precision="0"
+              controls-position="right"
+              size="mini"
+              v-model="form.order.receiveDays"
             />
-            <span class="input-text_right">天后自动确认收货</span>
+            <span class="input-text_right">小时后自动关闭</span>
+            <!--            <el-radio v-model="form.registerMethod">手机号 + 短信验证码</el-radio>-->
           </div>
           <div class="form-item-help">
-            <p class="extra">如果在期间未确认收货，系统自动完成收货，设置0天不自动收货</p>
+            <p class="extra">如果在期间订单未付款，系统自动关闭，设置0天不自动关闭</p>
           </div>
-        </el-form-item>
-        <el-form-item label="已完成订单:">
-          <div>
+        </div>
+      </div>
+      <div class="form-item">
+        <span style="color: red;padding-top: 4px">*</span>
+        <span class="form-item-input-label">
+        未支付订单：</span>
+        <div class="form-item-content">
+          <div class="form-item-input">
             <el-input-number
               :min="0"
               :precision="0"
+              controls-position="right"
+              size="mini"
+              v-model="form.order.refundDays"
             />
-            <span class="input-text_right">天内允许申请售后</span>
+            <span class="input-text_right">小时后自动关闭</span>
+            <!--            <el-radio v-model="form.registerMethod">手机号 + 短信验证码</el-radio>-->
           </div>
           <div class="form-item-help">
-            <p class="extra">订单完成后，用户在指定期限内可申请售后，设置0天不允许申请</p>
+            <p class="extra">如果在期间订单未付款，系统自动关闭，设置0天不自动关闭</p>
           </div>
-        </el-form-item>
+        </div>
+      </div>
+      <el-divider content-position="left"><span style="font-size: 13px;color: rgba(0,0,0,.45)">运费设置</span>
+      </el-divider>
+      <div class="form-item">
+        <span style="color: red">*</span>
+        <span class="form-item-label" >
+        运费组合策略:
+      </span>
+        <div class="form-item-content">
+          <div class="form-item-radio">
+            <el-radio-group v-model="form.freightRule">
+              <el-radio :label="10">
+                <span>叠加</span>
+                <!--              <el-tag color="green">推荐</el-tag>-->
+              </el-radio>
+              <el-radio :label="20">以最低运费结算</el-radio>
+              <el-radio :label="30">以最高运费结算</el-radio>
+            </el-radio-group>
+          </div>
+          <div class="form-item-help">
+            <p class="extra" v-if="form.freightRule===10">
+              <small>订单中的商品有多个运费模板时，将每个商品的运费之和订为订单总运费</small>
+            </p>
+            <p class="extra"  v-if="form.freightRule===20">
+              <small>订单中的商品有多个运费模板时，取订单中运费最少的商品的运费计为订单总运费</small>
+            </p>
+            <p class="extra" v-if="form.freightRule===30">
+              <small>订单中的商品有多个运费模板时，取订单中运费最多的商品的运费计为订单总运费</small>
+            </p>
+          </div>
+        </div>
+      </div>
 
-        <el-divider content-position="left">运费设置</el-divider>
+      <el-button type="primary" style="margin-left: 150px;margin-top: 20px" @click="handleSubmit">提交</el-button>
 
-        <el-form-item style="padding-top: 20px" label="运费组合策略">
-          <el-radio-group v-model="radio">
-            <div class="radio-item">
-              <div>
-                <el-radio :label="10">叠加</el-radio>
-              </div>
-            </div>
-            <div class="radio-item">
-              <div>
-                <el-radio :label="20">以最低运费结算</el-radio>
-              </div>
-            </div>
-            <div class="radio-item">
-              <div>
-                <el-radio :label="30">以最高运费结算</el-radio>
-              </div>
-            </div>
-          </el-radio-group>
-          <div class="form-item-help" v-show="radio === 10">
-            <p class="extra">订单中的商品有多个运费模板时，将每个商品的运费之和订为订单总运费</p>
-          </div>
-          <div class="form-item-help" v-show="radio === 20">
-            <p class="extra">订单中的商品有多个运费模板时，取订单中运费最少的商品的运费计为订单总运费</p>
-          </div>
-          <div class="form-item-help" v-show="radio === 30">
-            <p class="extra">订单中的商品有多个运费模板时，取订单中运费最多的商品的运费计为订单总运费</p>
-          </div>
-        </el-form-item>
-
-        <el-form-item>
-          <el-button type="primary" html-type="submit">提交</el-button>
-        </el-form-item>
-      </el-form>
     </div>
   </div>
 </template>
 
+
 <script>
 export default {
   name: "index",
-  data () {
+  data() {
     return {
       // 当前设置项的key
       key: 'trade',
       // 标签布局属性
-      labelCol: { span: 4 },
+      labelCol: {span: 4},
       // 输入框布局属性
-      wrapperCol: { span: 10 },
+      wrapperCol: {span: 10},
       // loading状态
       isLoading: false,
       // 当前表单元素
-      form: {},
+      form: {
+        order: {
+          closeDays:0,
+          receiveDays:0,
+          refundDays:0
+        },
+        freightRule:10
+      },
       // 单选框样式
       radioStyle: {
         display: 'block',
@@ -105,14 +137,14 @@ export default {
     }
   },
   // 初始化数据
-  created () {
+  created() {
     // 获取当前详情记录
     this.getDetail()
   },
   methods: {
 
     // 获取当前详情记录
-    getDetail () {
+    getDetail() {
       this.isLoading = true
     },
 
@@ -120,10 +152,10 @@ export default {
     /**
      * 确认按钮
      */
-    handleSubmit (e) {
+    handleSubmit(e) {
       e.preventDefault()
       // 表单验证
-      const { form: { validateFields } } = this
+      const {form: {validateFields}} = this
       validateFields((errors, values) => {
         // 提交到后端api
         !errors && this.onFormSubmit(values)
@@ -133,7 +165,7 @@ export default {
     /**
      * 提交到后端api
      */
-    onFormSubmit (values) {
+    onFormSubmit(values) {
       this.isLoading = true
     }
 
@@ -142,24 +174,42 @@ export default {
 </script>
 
 <style scoped>
-/*.content {*/
-/*  margin: 20px;*/
-/*  display: flex;*/
-/*  justify-content: center; !* 水平居中 *!*/
-/*  align-items: center;     !* 垂直居中 *!*/
-/*}*/
-.content{
-  padding-left: 100px;
-}
-.input-text_right {
-  margin-left: 10px;
-}
-.radio-item {
-  margin-bottom: 16px;
-}
-.extra {
-  color: rgba(0,0,0,.45);
-  font-size: 13px!important;
+.form-item {
+  display: flex;
+  margin-top: 40px;
+  margin-left: 40px;
 }
 
+.trade .form-item .form-item-label {
+  margin-left: 5px;
+  margin-right: 10px;
+  font-size: 13px;
+  /*padding-top: 5px;*/
+  /*justify-content: flex-end;*/
+}
+.trade .form-item .form-item-input-label {
+  margin-left: 5px;
+  margin-right: 10px;
+  font-size: 13px;
+  padding-top: 5px;
+  /*justify-content: flex-end;*/
+}
+
+.trade .form-item .form-item-content .form-item-radio {
+  margin: 0;
+}
+
+.trade .form-item .form-item-content .form-item-input {
+  margin: 0;
+}
+
+.trade .form-item .form-item-content .form-item-input .input-text_right {
+  margin-left: 10px;
+  font-size: 13px;
+}
+
+.trade .form-item .form-item-content .form-item-help {
+  color: rgba(0, 0, 0, .45);
+  font-size: 13px !important;
+}
 </style>

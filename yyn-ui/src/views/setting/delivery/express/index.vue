@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="物流公司" prop="noticeTitle">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
+      <el-form-item label="物流公司名称" prop="expressName">
         <el-input
-          v-model="queryParams.noticeTitle"
+          v-model="queryParams.expressName"
           placeholder="请输入物流公司名称"
           clearable
           @keyup.enter.native="handleQuery"
@@ -23,7 +23,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:notice:add']"
+          v-hasPermi="['setting:delivery:express:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -34,7 +34,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:notice:edit']"
+          v-hasPermi="['setting:delivery:express:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -45,39 +45,28 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:notice:remove']"
+          v-hasPermi="['setting:delivery:express:remove']"
         >删除</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['setting:delivery:express:export']"
+        >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="noticeList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="expressList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="物流公司ID" align="center" prop="noticeId" width="100" />
-      <el-table-column
-        label="物流公司名称"
-        align="center"
-        prop="noticeTitle"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="物流公司编码 (快递100)"
-        align="center"
-        prop="noticeTitle"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="排序"
-        align="center"
-        prop="orderNum"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column label="创建者" align="center" prop="createBy" width="100" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="100">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="物流公司ID" align="center" prop="expressId" />
+      <el-table-column label="物流公司名称" align="center" prop="expressName" />
+      <el-table-column label="物流公司编码 (快递100)" align="center" prop="kuaidi100Code" />
+      <el-table-column label="排序" align="center" prop="sort" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -85,14 +74,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:notice:edit']"
+            v-hasPermi="['setting:delivery:express:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:notice:remove']"
+            v-hasPermi="['setting:delivery:express:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -106,27 +95,21 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改公告对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="780px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="物流公司名称" prop="noticeTitle">
-              <el-input v-model="form.noticeTitle" placeholder="请输入物流公司名称" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="物流公司编码" prop="noticeTitle">
-              <el-input v-model="form.noticeTitle" placeholder="请输入物流公司编码" />
-            </el-form-item>
-          </el-col>
-          <div>用于快递100API查询物流信息，请参照物流公司编码表</div>
-          <el-col :span="24">
-            <el-form-item label="排序">
-              <el-input-number v-model="form.noticeTitle" placeholder="请输入排序号码" />
-            </el-form-item>
-          </el-col>
-        </el-row>
+    <!-- 添加或修改物流公司记录对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <el-form-item label="物流公司名称" prop="expressName">
+          <el-input v-model="form.expressName" placeholder="请输入物流公司名称" />
+        </el-form-item>
+        <el-form-item label="物流公司编码 " prop="kuaidi100Code">
+          <el-input v-model="form.kuaidi100Code" placeholder="请输入物流公司编码 (快递100)" />
+        </el-form-item>
+        <el-form-item label="排序" prop="sort">
+          <el-input-number v-model="form.sort" placeholder="请输入排序(数字越小越靠前)" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -137,11 +120,10 @@
 </template>
 
 <script>
-import {addNotice, delNotice, getNotice, listNotice, updateNotice} from "@/api/system/notice";
+import {addExpress, delExpress, getExpress, listExpress, updateExpress} from "@/api/setting/delivery/express";
 
 export default {
-  name: "Notice",
-  dicts: ['sys_notice_status', 'sys_notice_type'],
+  name: "Express",
   data() {
     return {
       // 遮罩层
@@ -156,8 +138,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 公告表格数据
-      noticeList: [],
+      // 物流公司记录表格数据
+      expressList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -166,20 +148,27 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        noticeTitle: undefined,
-        createBy: undefined,
-        status: undefined
+        expressName: null,
+        kuaidi100Code: null,
+        sort: null,
+        storeId: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        noticeTitle: [
-          { required: true, message: "公告标题不能为空", trigger: "blur" }
+        expressName: [
+          { required: true, message: "物流公司名称不能为空", trigger: "blur" }
         ],
-        noticeType: [
-          { required: true, message: "公告类型不能为空", trigger: "change" }
-        ]
+        kuaidi100Code: [
+          { required: true, message: "物流公司编码 (快递100)不能为空", trigger: "blur" }
+        ],
+        sort: [
+          { required: true, message: "排序(数字越小越靠前)不能为空", trigger: "blur" }
+        ],
+        storeId: [
+          { required: true, message: "商城ID不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -187,11 +176,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询公告列表 */
+    /** 查询物流公司记录列表 */
     getList() {
       this.loading = true;
-      listNotice(this.queryParams).then(response => {
-        this.noticeList = response.rows;
+      listExpress(this.queryParams).then(response => {
+        this.expressList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -204,11 +193,16 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        noticeId: undefined,
-        noticeTitle: undefined,
-        noticeType: undefined,
-        noticeContent: undefined,
-        status: "0"
+        expressId: null,
+        expressName: null,
+        kuaidi100Code: null,
+        sort: null,
+        storeId: null,
+        createBy: null,
+        createTime: null,
+        updateBy: null,
+        updateTime: null,
+        remark: null
       };
       this.resetForm("form");
     },
@@ -224,38 +218,38 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.noticeId)
-      this.single = selection.length!=1
+      this.ids = selection.map(item => item.expressId)
+      this.single = selection.length!==1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加公告";
+      this.title = "添加物流公司记录";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const noticeId = row.noticeId || this.ids
-      getNotice(noticeId).then(response => {
+      const expressId = row.expressId || this.ids
+      getExpress(expressId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改公告";
+        this.title = "修改物流公司记录";
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.noticeId != undefined) {
-            updateNotice(this.form).then(response => {
+          if (this.form.expressId != null) {
+            updateExpress(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addNotice(this.form).then(response => {
+            addExpress(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -266,15 +260,20 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const noticeIds = row.noticeId || this.ids
-      this.$modal.confirm('是否确认删除公告编号为"' + noticeIds + '"的数据项？').then(function() {
-        return delNotice(noticeIds);
+      const expressIds = row.expressId || this.ids;
+      this.$modal.confirm('是否确认删除物流公司记录编号为"' + expressIds + '"的数据项？').then(function() {
+        return delExpress(expressIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {});
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      this.download('store/express/export', {
+        ...this.queryParams
+      }, `express_${new Date().getTime()}.xlsx`)
     }
   }
 };
 </script>
-
